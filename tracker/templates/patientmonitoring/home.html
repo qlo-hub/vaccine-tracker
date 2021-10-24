@@ -1,0 +1,84 @@
+{% extends 'patientmonitoring/main.html' %}
+
+{% block content %}
+<style>
+  tr{
+    cursor: pointer;
+  }
+</style>
+<div class="container" style="margin-top: 2%;">
+    <div class="row" style="padding:1%">
+        <div class="col-lg-6">
+            <h3>Search Patient:</h3>
+            <form method="get">
+              <div class="row">
+                <div class="col-sm-8">
+                  {{patientFilter.form}}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-8">
+                  <label for="submitButton" class="col-sm-3 col-form-label"></label>
+                  <button type="submit" style="width: 100%;" class="btn btn-primary">Search</button>
+                  <p class="fw-lighter" style="color: red;">*Do not input to get all the records.</p>
+                </div>
+              </div>
+            </form>
+        </div>
+        
+        <div class="col-lg-6">
+          <a href="{% url 'createRecord' %}">
+            <button type="submit" style="float:right; margin-bottom: 3%;"class="btn btn-primary">
+              Create New Record
+            </button>
+          </a>
+          {% if patientFilter.form.data %}
+          <table id="rows" class="table table-primary table-bordered table-hover border-dark"> 
+            <thead>
+              <th>Record #</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Date of Birth</th>
+            </thead>
+            {% for patient in patients %}
+            <tbody>
+              <tr onclick="window.location = '{% url 'patient' patient.id %}'" data-href="">
+                <td>000{{ patient.id }}</td>
+                <td>{{ patient.first_name }}</td>
+                <td>{{ patient.last_name }}</td>
+                <td>{{ patient.birthdate }}</td>
+              </tr>
+            </tbody>
+            {% empty %}
+            <tr><td colspan="6" style="color: red;"><h6>No records found.</h6></td></tr>
+            {% endfor %}
+          </table>
+          <a href="{% url 'home' %}">
+            <button class="btn btn-danger">Clear search</button>
+          </a>
+          {% endif %}  
+        </div>
+    </div>
+</div>
+
+<script>
+  // --Clickable rows--
+  // function patientPage(){
+  //   var table = document.getElementById("rows");
+  //   var rows = table.getElementsByTagName("tr");
+    
+  //   for(var i = 0; i < rows.length; i++){
+  //     var curr = table.rows[i];
+  //     var handler = function(row){
+  //       return function(){
+  //         var loc = row[0].getAttribute("data-href");
+  //         var id = loc.innerHTML;
+  //         window.location = id;
+  //       }
+  //     }
+  //     curr.onclick = handler(curr);
+  //   }
+  // }
+</script>
+
+{% endblock content %}
