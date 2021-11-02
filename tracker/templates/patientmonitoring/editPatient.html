@@ -9,10 +9,6 @@
   <div class="row">
       <div class="col-lg-2" style="background-color: white;display: flex; justify-content: center; align-items: center;">
         <div class="btn-group-vertical" style="display: block;">
-          <!-- <button type="button" class="btn btn-primary">Profile</button>
-          <button type="button" class="btn btn-outline-primary">Appointment</button>
-          <button type="button" class="btn btn-outline-primary">Vaccine</button>
-          <button type="button" class="btn btn-outline-primary">Portal</button> -->
           <a class="btn btn-outline-primary" href="#">Profile</a>
           <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
           <a class="btn btn-outline-primary">Vaccine</a>
@@ -50,9 +46,9 @@
                     <td class="table-warning">Sex</td>
                     <td colspan="2">{{patient_form.sex}}</td>
                     <td class="table-warning" colspan="2">Date of Birth</td>
-                    <td colspan="2">{{patient_form.birthdate}}</td>
+                    <td colspan="2" oninput="format()">{{patient_form.birthdate}}</td>
                     <td class="table-warning">Age</td>
-                    <td>{{patient_form.age}}</td>
+                    <td id="age"></td>
                   </tr>
                   <tr>
                     <td class="table-warning" style="text-align: left;"><b>Contact #</b></td>
@@ -130,13 +126,40 @@
                 </tbody>
               </table>
         
-            <button type="submit" class="btn btn-warning">Edit</button>
+            <button type="submit" class="btn btn-success">Save</button>
             <a class="btn btn-danger" href="{% url 'patient' patient.id %}">Cancel</a>
+            <!-- <span class="fw-lighter" style="color: red;">*Required fields</span> -->
         </form>
         </div>
       </div>
 
 <script>
+  // --Age format--
+  function format(){
+    var dob = document.getElementById('dob').value;
+
+    var month = new Date(dob).getMonth() + 1;
+    var year = new Date(dob).getFullYear();
+    var day = new Date(dob).getDate();
+
+    var curr = new Date();
+
+    var d = curr.getDate();
+    var m = curr.getMonth() - month + 1;
+    if(d < day){
+      m -= 1;
+    }
+    var y = curr.getFullYear() - year;
+    
+
+    if(!isNaN(m) && !isNaN(y)){
+      document.getElementById('age').innerHTML = y + " Y " + m + " M ";
+    }
+    else{
+      document.getElementById('age').innerHTML = " ";
+    }
+  }
+
   // --Check box for Emergency Contact--
   function check(cb){
       var mlname = document.getElementById("mlname").value;

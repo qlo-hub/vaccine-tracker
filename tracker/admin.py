@@ -6,5 +6,4 @@ from .models import *
 
 admin.site.register(Patient)
 admin.site.register(Physician)
-# admin.site.register(Parents)
-# admin.site.register(Address)
+admin.site.register(Appointment)

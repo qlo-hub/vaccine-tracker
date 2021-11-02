@@ -76,6 +76,7 @@ def homePage(request):
     patients = Patient.objects.all()
     patientFilter = PatientFilter(request.GET, queryset=patients)
     patients = patientFilter.qs
+
     physicians = Physician.objects.all()
     data = {
         'patients': patients, 'physicians': physicians , 'patientFilter': patientFilter,
@@ -87,7 +88,10 @@ def homePage(request):
 @login_required(login_url='login')
 def createRecord(request):
     patient_form = CreateRecordFormPatient()
-    record_no = Patient.objects.all().count
+    latest = Patient.objects.latest('id')
+    latest_id = getattr(latest, 'id')
+
+    
     
     if(request.method == "POST"):
         patient_form = CreateRecordFormPatient(request.POST)
@@ -97,14 +101,14 @@ def createRecord(request):
 
             patient_form.save()
 
-            # messages.success(request, 'Account was created for ' + pfname + plname)
-            return redirect('/home')
+            messages.success(request, 'Account was created for ' + pfname + plname)
+        return redirect('/home')
         # else:
             # messages.error(request, "Unsuccessful registration. Invalid information.")
 
 
     context = {'patient_form':patient_form,
-                'record_no': record_no
+                'latest_id': latest_id,
     }
     return render(request, "patientmonitoring/createRecord.html", context)
 
@@ -145,12 +149,23 @@ def editPatient(request, pk):
 @login_required(login_url='login')
 def appointment(request, pk):
     patient = Patient.objects.get(id=pk)
-    bday = getattr(patient, 'birthdate')
-    curr_date = datetime.date.today()
-    months = curr_date.month - bday.month
+    appointment_form = AppointmentForm(initial={'patient': patient})
+
+    appointments = Appointment.objects.all()
+
+    if(request.method == "POST"):
+        appointment_form = AppointmentForm(request.POST)
+        if appointment_form.is_valid():
+            appointment_form.save()
+            messages.success(request, 'Appointment scheduled!')
+        else:
+            messages.error(request, 'Appointment scheduling failed!')
+        return redirect('/appointment/' + pk)
 
     data = {
-        'patient': patient, 'months': months,
+        'patient': patient,
+        'appointment_form': appointment_form,
+        'appointments': appointments,
     }
 
     return render(request, 'patientmonitoring/appointment.html', data)

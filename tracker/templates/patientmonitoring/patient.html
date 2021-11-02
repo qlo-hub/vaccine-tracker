@@ -56,8 +56,8 @@
                   <td>{{patient.nick_name}}</td>
                   <td class="table-warning" colspan="2">Attending Doctor</td>
                   <td colspan="2">{{patient.attending_doctor}}</td>
-                  <td class="table-warning">Patient Record #</td>
-                  <td class="table-warning" id="record_no">000{{patient.id}}</td>
+                  <td class="table-warning">Patient Rec. #</td>
+                  <td class="table-warning" style="text-align: left;">000{{patient.id}}</td>
                 </tr>
                 <tr>
                   <td class="table-warning">First</td>
@@ -75,7 +75,7 @@
                   <td class="table-warning" colspan="2">Date of Birth</td>
                   <td colspan="2">{{patient.birthdate}}</td>
                   <td id="age" class="table-warning">Age</td>
-                  <td>{{patient.age}} years {{months}} months</td>
+                  <td>{{patient.age}} Y {{months}} M</td>
                 </tr>
                 <tr>
                   <td class="table-warning" style="text-align: left;"><b>Contact #</b></td>
@@ -129,7 +129,7 @@
                 <tr>
                   <td class="table-warning" style="text-align: left;"><b>Emergency Contact</b></td>
                   <td class="table-warning" colspan="2">
-                    <input type="checkbox" name="flexRadioDefault" id="contact" onclick="check(this)" checked>
+                    <input type="checkbox" name="flexRadioDefault" id="contact" checked disabled>
                     <label for="contact">Same as parent's information</label>
                   </td>
                   <td class="table-warning" colspan="6"></td>

@@ -5,6 +5,9 @@
   tr{
     cursor: pointer;
   }
+  .form-control{
+    margin-bottom: 1%;
+  }
 </style>
 <div class="container" style="margin-top: 2%;">
     <div class="row" style="padding:1%">
@@ -19,7 +22,7 @@
               <div class="row mb-3">
                 <div class="col-sm-8">
                   <label for="submitButton" class="col-sm-3 col-form-label"></label>
-                  <button type="submit" style="width: 100%;" class="btn btn-primary">Search</button>
+                  <button type="submit" style="width: 100%;" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
                   <p class="fw-lighter" style="color: red;">*Do not input to get all the records.</p>
                 </div>
               </div>
@@ -42,7 +45,7 @@
             </thead>
             {% for patient in patients %}
             <tbody>
-              <tr onclick="window.location = '{% url 'patient' patient.id %}'" data-href="">
+              <tr onclick="window.location='{% url 'patient' patient.id %}'">
                 <td>000{{ patient.id }}</td>
                 <td>{{ patient.first_name }}</td>
                 <td>{{ patient.last_name }}</td>
@@ -54,31 +57,12 @@
             {% endfor %}
           </table>
           <a href="{% url 'home' %}">
-            <button class="btn btn-danger">Clear search</button>
+            <button class="btn btn-danger"><i class="fas fa-search-minus"></i> Clear search</button>
           </a>
           {% endif %}  
         </div>
     </div>
 </div>
 
-<script>
-  // --Clickable rows--
-  // function patientPage(){
-  //   var table = document.getElementById("rows");
-  //   var rows = table.getElementsByTagName("tr");
-    
-  //   for(var i = 0; i < rows.length; i++){
-  //     var curr = table.rows[i];
-  //     var handler = function(row){
-  //       return function(){
-  //         var loc = row[0].getAttribute("data-href");
-  //         var id = loc.innerHTML;
-  //         window.location = id;
-  //       }
-  //     }
-  //     curr.onclick = handler(curr);
-  //   }
-  // }
-</script>
 
 {% endblock content %}

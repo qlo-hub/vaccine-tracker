@@ -1,6 +1,10 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.fields import CharField, DateField, TimeField
+from django.forms.fields import ChoiceField
 from django.urls import reverse
+from django.core.validators import *
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -30,13 +34,12 @@ class Patient(models.Model):
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     suffix = models.CharField(max_length=2, null=True, blank=True)
     nick_name = models.CharField(max_length=100, null=True, blank=True)
-    age = models.IntegerField(null=True)
     sex = models.CharField(max_length=1, null=True, choices=SEX)
     birthdate = models.DateField(null=True)
     attending_doctor = models.ForeignKey(Physician, related_name="docpatient", on_delete=models.CASCADE)
 
     # Contact Deets
-    cell_no = PhoneNumberField(null=True, blank=True)
+    cell_no = PhoneNumberField(null=True, blank=True, validators=[MaxLengthValidator(13)])
     landline = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(max_length=254, null=True, blank=True)
     
@@ -68,3 +71,22 @@ class Patient(models.Model):
     c2contact = PhoneNumberField(null=True, blank=True)
     def __str__(self):
         return self.last_name + ", " + self.first_name
+
+class Appointment(models.Model):
+    STATUS = (
+        ('Blank','Blank'),
+        ('Confirmed', 'Confirmed'),
+        ('Cancelled', 'Cancelled'),
+        ('Rescheduled', 'Rescheduled'),
+        ('Requested', 'Requested'),
+    )
+    patient = models.ForeignKey(Patient, null=True, on_delete=models.CASCADE)
+    status = models.CharField(max_length=100, choices=STATUS, null=True)
+    date = models.DateField(null=True)
+    time = models.TimeField(null=True)
+    doctor = models.ForeignKey(Physician, on_delete=models.CASCADE)
+    visit = models.CharField(max_length=100, null=True)
+    location = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return str(self.patient)

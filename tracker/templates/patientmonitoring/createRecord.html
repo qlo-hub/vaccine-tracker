@@ -2,7 +2,6 @@
 
 {% block content %}
 <style>
-
 </style>
 
 <form class="create-record-form" action="" method= "POST">
@@ -13,15 +12,15 @@
         <td class="table-warning" style="text-align: left;"><b>Name</b></td>
         <td class="table-warning">Nickname</td>
         <td>{{patient_form.nick_name}}</td>
-        <td class="table-warning" colspan="2">Attending Doctor</td>
+        <td class="table-warning" colspan="2">Attending Doctor<span style="color: red;">*</span></td>
         <td colspan="2">{{patient_form.attending_doctor}}</td>
         <td class="table-warning">Patient Record #</td>
-        <td class="table-warning" id="record_no">{{record_no}}</td>
+        <td class="table-warning" id="record_no">{{latest_id}}</td>
       </tr>
       <tr>
-        <td class="table-warning">First</td>
+        <td class="table-warning">First<span style="color: red;">*</span></td>
         <td colspan="2">{{patient_form.first_name}}</td>
-        <td class="table-warning" >Last</td>
+        <td class="table-warning" >Last<span style="color: red;">*</span></td>
         <td>{{patient_form.last_name}}</td>
         <td class="table-warning">Middle</td>
         <td>{{patient_form.middle_name}}</td>
@@ -29,12 +28,12 @@
         <td>{{patient_form.suffix}}</td>
       </tr>
       <tr>
-        <td class="table-warning">Sex</td>
+        <td class="table-warning">Sex<span style="color: red;">*</span></td>
         <td colspan="2">{{patient_form.sex}}</td>
-        <td class="table-warning" colspan="2">Date of Birth</td>
-        <td colspan="2">{{patient_form.birthdate}}</td>
+        <td class="table-warning" colspan="2">Date of Birth<span style="color: red;">*</span></td>
+        <td colspan="2" onchange="format()">{{patient_form.birthdate}}</td>
         <td class="table-warning">Age</td>
-        <td>{{patient_form.age}}</td>
+        <td id="age"></td>
       </tr>
       <tr>
         <td class="table-warning" style="text-align: left;"><b>Contact #</b></td>
@@ -113,14 +112,39 @@
   </table>
   <button type="submit" class="btn btn-success">Create</button>
   <a class="btn btn-danger" href="{% url 'home' %}">Cancel</a>
+  <span class="fw-lighter" style="color: red;">*Required fields</span>
 </form>
 
 
 <script>
+  // --Age format--
+  function format(){
+    var dob = document.getElementById('dob').value;
+
+    var month = new Date(dob).getMonth() + 1;
+    var year = new Date(dob).getFullYear();
+    var day = new Date(dob).getDate();
+
+    var curr = new Date();
+
+    var d = curr.getDate();
+    var m = curr.getMonth() - month + 1;
+    if(d < day){
+      m -= 1;
+    }
+    var y = curr.getFullYear() - year;
+    
+
+    if(!isNaN(m) && !isNaN(y)){
+      document.getElementById('age').innerHTML = y + " Y " + m + " M ";
+    }
+    else{
+      document.getElementById('age').innerHTML = " ";
+    }
+  }
+
   // --Record Number--
-  var record = document.querySelectorAll("#record_no");
-  var record_no = parseInt(record[0].innerHTML) + 1;
-  document.getElementById("record_no").innerHTML = "000" + record_no;
+  document.getElementById('record_no').innerHTML = "000" + (parseInt(document.getElementById('record_no').innerHTML) + 1);
 
   // --Check box for Emergency Contact--
   function check(cb){
@@ -132,8 +156,7 @@
       var ffname = document.getElementById("ffname").value;
       var fcontact = document.getElementById("fcontact").value;
 
-    if(cb.checked && mlname != "" && mfname != "" && mcontact != "" &&
-       flname != "" && ffname != "" && fcontact != ""){
+    if(cb.checked){
           document.getElementById("c1full_name").value = mfname + " "+ mlname;
           document.getElementById("relation1").value = "Mother";
           document.getElementById("c1contact").value = mcontact;

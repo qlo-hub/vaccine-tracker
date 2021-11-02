@@ -1,11 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core import validators
+from django.conf import settings
 from django.db.models import fields
 from django.forms import ModelForm, widgets
-from django.forms.fields import IntegerField
+from django.forms.fields import DateField, IntegerField
 from django.forms.widgets import *
 from .models import *
+from django.core.validators import *
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget, PhoneNumberPrefixWidget
 
@@ -32,28 +35,35 @@ class CreateRecordFormPatient(ModelForm):
     cell_no = PhoneNumberField(
         widget=PhoneNumberInternationalFallbackWidget, required=False,
     )
-    cell_no.widget.attrs = {'class': 'form-control', 'placeholder': 'Mobile Number'}
+    cell_no.widget.attrs = {'class': 'form-control', 'placeholder': '+63'}
 
     mcontact = PhoneNumberField(
         widget=PhoneNumberInternationalFallbackWidget, required=False 
     )
-    mcontact.widget.attrs = {'class': 'form-control', 'id': 'mcontact', 'placeholder': 'Contact Number'}
+    mcontact.widget.attrs = {'class': 'form-control', 'id': 'mcontact', 'placeholder': '+63'}
 
     fcontact = PhoneNumberField(
         widget=PhoneNumberInternationalFallbackWidget, required=False 
     )
-    fcontact.widget.attrs = {'class': 'form-control', 'id': 'fcontact', 'placeholder': 'Contact Number'}
+    fcontact.widget.attrs = {'class': 'form-control', 'id': 'fcontact', 'placeholder': '+63'}
 
     c1contact = PhoneNumberField(
         widget=PhoneNumberInternationalFallbackWidget, required=False
     )
-    c1contact.widget.attrs = {'class': 'form-control', 'id': 'c1contact', 'placeholder': 'Contact Number'}
+    c1contact.widget.attrs = {'class': 'form-control', 'id': 'c1contact', 'placeholder': '+63'}
 
     c2contact = PhoneNumberField(
         widget=PhoneNumberInternationalFallbackWidget, required=False
     )
-    c2contact.widget.attrs = {'class': 'form-control', 'id': 'c2contact', 'placeholder': 'Contact Number'}
+    c2contact.widget.attrs = {'class': 'form-control', 'id': 'c2contact', 'placeholder': '+63'}
 
+    birthdate = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'dob', 'placeholder': 'mm-dd-yyyy'},
+            format='%m-%d-%Y',
+        ),
+        input_formats=['%m-%d-%Y']
+    )
     class Meta:
         model = Patient
         fields = '__all__'
@@ -63,9 +73,8 @@ class CreateRecordFormPatient(ModelForm):
             'middle_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle Name'}),
             'suffix': TextInput(attrs={'class': 'form-control', 'placeholder': 'Suffix'}),
             'nick_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Nickname'}),
-            'age': NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}),
             'sex': Select(attrs={'class': 'form-control', 'placeholder': 'Sex'}),
-            'birthdate': NumberInput(attrs={'type': 'date','class': 'form-control', 'placeholder': 'Date of Birth'}),
+            
             'attending_doctor': Select(attrs={'class': 'form-control', 'placeholder': 'Attending Doctor'}),
             'landline': TextInput(attrs={'class': 'form-control', 'placeholder': 'Home/Landline'}),
             'email': EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
@@ -88,4 +97,25 @@ class CreateRecordFormPatient(ModelForm):
             'relation1': TextInput(attrs={'class': 'form-control', 'id': 'relation1', 'placeholder': 'Relation'}),
             'c2full_name': TextInput(attrs={'class': 'form-control', 'id': 'c2full_name', 'placeholder': 'Full Name'}),
             'relation2': TextInput(attrs={'class': 'form-control', 'id': 'relation2', 'placeholder': 'Relation'}),     
+        }
+
+
+class AppointmentForm(ModelForm):
+    date = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm-dd-yyyy'},
+            format='%m-%d-%Y',
+        ),
+        input_formats=['%m-%d-%Y']
+    )
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+        widgets = {
+            'patient': HiddenInput(attrs={'type': 'hidden'}),
+            'status': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Status'}),
+            'time': forms.NumberInput(attrs={'type': 'time', 'class': 'form-control', 'placeholder': 'Time'}),
+            'doctor': Select(attrs={'class': 'form-control', 'placeholder': 'Doctor'}),
+            'visit': TextInput(attrs={'class': 'form-control', 'placeholder': 'Visit'}),
+            'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
         }
