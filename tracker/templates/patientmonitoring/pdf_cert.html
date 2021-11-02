@@ -1,0 +1,41 @@
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Vaccine Certificate</title>
+
+        <style type="text/css">
+            body {
+                font-size: 14px;
+            }
+
+    
+        </style>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <link href="{% static 'images/vax-cert-logo.png' %}">
+            <h1>CHILDCARE PEDIATRICIANS</h1>
+            <hr>
+            <br>
+            <h2>To Whom This May Concern: </h2>
+            <p>
+                This is to certify that <b>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}}</b>,
+                <b>{{patient.age}} years {{months}} months, {{patient.sex}}</b>, of <b>{{patient.city}}</b> has completed the following 
+                vaccinations: <br>
+                
+                <br> This certificate is being issued upon the request of the above-mentioned for
+                whatever purpose it may serve, except those of a medico-legal-nature.<br><br><br>
+
+                {{patient.attending_doctor}}
+            </p>
+
+        </div>
+    </body>
+</html>
+
+{% endblock %}

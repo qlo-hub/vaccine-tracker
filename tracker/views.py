@@ -14,6 +14,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from .filters import *
 import datetime
+from xhtml2pdf import pisa
+from easy_pdf.views import PDFTemplateResponseMixin
+from django.views.generic.detail import DetailView
 
 
 # Create your views here.
@@ -169,3 +172,60 @@ def appointment(request, pk):
     }
 
     return render(request, 'patientmonitoring/appointment.html', data)
+
+
+@login_required(login_url='login')
+def portal(request, pk):
+
+    patient = Patient.objects.get(id=pk)
+    portal_form = PortalForm()
+    bday = getattr(patient, 'birthdate')
+    curr_date = datetime.date.today()
+    months = curr_date.month - bday.month 
+
+    if request.method == 'POST':
+        form = PortalForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Account Created!')
+        else:
+            messages.error(request, 'Failed to create account')
+        return redirect('/portal/' + pk)
+    
+    data = {
+        'patient': patient, 
+        'months': months,
+        'portal_form': portal_form,
+    }
+    return render(request, 'patientmonitoring/portal.html', data)
+
+@login_required(login_url='login')
+def certificate(request, pk):
+    patient = Patient.objects.get(id=pk)
+    bday = getattr(patient, 'birthdate')
+    cert_date = None
+    curr_date = datetime.date.today()
+    months = curr_date.month - bday.month 
+
+    if(request.method == "POST"):
+        cert_date = request.POST['sign_cert']
+
+    if cert_date:
+        if patient:
+            patient.cert_date = cert_date
+            patient.save()
+    return redirect('/certificate/' + pk)
+
+    data = {
+        'patient': patient, 
+        'months': months,
+        'curr_date': curr_date,
+    }
+    return render(request, 'patientmonitoring/certificate.html', data)
+
+class PdfDetail(PDFTemplateResponseMixin, DetailView):
+    template_name = 'patientmonitoring/pdf_cert.html'
+    context_object_name = 'patient'
+    model = Patient
+    curr_date = datetime.date.today()
+

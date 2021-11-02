@@ -119,3 +119,14 @@ class AppointmentForm(ModelForm):
             'visit': TextInput(attrs={'class': 'form-control', 'placeholder': 'Visit'}),
             'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
         }
+
+class PortalForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+        widgets = {
+            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+            'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
+            'password1': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}),
+            'password2': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'required': True,}),
+        }

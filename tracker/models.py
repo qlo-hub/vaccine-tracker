@@ -38,6 +38,13 @@ class Patient(models.Model):
     birthdate = models.DateField(null=True)
     attending_doctor = models.ForeignKey(Physician, related_name="docpatient", on_delete=models.CASCADE)
 
+    # Account Portal Deets
+    username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank= True)
+    relationship = models.CharField(max_length=100, null=True)
+
+    #Vaccine Certificate Date
+    cert_date = models.DateField(null=True)
+
     # Contact Deets
     cell_no = PhoneNumberField(null=True, blank=True, validators=[MaxLengthValidator(13)])
     landline = models.CharField(max_length=100, null=True, blank=True)

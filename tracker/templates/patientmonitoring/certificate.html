@@ -1,0 +1,82 @@
+{% extends 'patientmonitoring/main.html' %}
+
+{% block content %}
+
+<style>
+</style>
+
+<nav class="navbar navbar-expand-xl" style="background-color: rgb(214, 214, 214);">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse me-auto" id="navbarTogglerDemo02">
+        <div style="margin-right: auto; margin-top: 10px;">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-custom">
+            <li class="nav-item" style="margin-right: 5px">
+              <h2>{{patient.first_name}}</h2>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <h2>{{patient.last_name}}</h2>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top: 10px;">({{patient.nick_name}})</h5></i>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top: 10px;">{{patient.age}} years {{months}} months</h5></i>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top: 10px;">{{patient.sex}}</h5></i>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top: 10px;">{{patient.birthdate}}</h5></i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</nav> 
+
+<div class="container-fluid" style="padding:1%; ">
+    <div class="row">
+        {% for message in messages %}
+        <h2 id='messages' style="color: green; text-align: center;"> {{ message }}  </h2>
+        {% endfor %}
+      </div>
+    <div class="row">
+        <div class="col-lg-2" style="background-color: rgb(255, 255, 255);display: flex; justify-content: center; align-items: center; padding-top: 8%; padding-bottom: 8%;">
+            <div class="btn-group-vertical" style="display: block;">
+              <a class="btn btn-outline-primary" href="{% url 'patient' patient.id %}">Profile</a>
+              <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
+              <a class="btn btn-outline-primary">Vaccine</a>
+              <a class="btn btn-outline-primary" href="{% url 'portal' patient.id%}">Portal</a>
+              <a class="btn btn-outline-primary" href="#">Certificate</a>
+            </div>
+        </div>
+
+        <div class="col-lg-10" style="background-color: white; padding-top: 8%; padding-bottom: 8%;">
+
+            {% if patient.cert_date is None %}
+            <h4>Date: No Vaccine Certificate Yet</h4>
+            {% else %}
+            <h4>Date: {{patient.cert_date}}</h4>
+            {% endif %}
+
+            <div class="certificate-text">
+                <p style="border-style: solid; padding: 1%; padding-bottom: 5%; font-size: 18px; color: black;">
+                    This is to certify that <b>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}}</b>,
+                    <b>{{patient.age}} years {{months}} months, {{patient.sex}}</b>, of <b>{{patient.city}}</b> has completed the following 
+                    vaccinations. <br><br> This certificate is being issued upon the request of the above-mentioned for
+                    whatever purpose it may serve, except those of a medico-legal-nature.<br><br>
+
+                    {{patient.attending_doctor}}
+                </p> 
+                <form action="post" style="display:inline;">
+                    <button type="submit" class="btn btn-primary" value="{{curr_date}}" name="sign_cert">Dr. Sign</button>
+                </form>
+                <a style="display:inline;" class="btn btn-primary" href="{% url 'generatepdf' patient.id %}">View/Print</a>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+{% endblock content %}
