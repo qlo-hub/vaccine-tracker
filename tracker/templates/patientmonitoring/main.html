@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,7 +100,7 @@
                   {{request.user}}
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li><a class="dropdown-item drops" href="http://127.0.0.1:8000/admin/"><i class="fas fa-users-cog"></i> Admin page</a></li>
+                  <li><a class="dropdown-item drops" href="http://127.0.0.1:8000/admin/" target="_blank" rel="noopener noreferrer"><i class="fas fa-users-cog"></i> Admin page</a></li>
                   <li><a class="dropdown-item drops" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
               </div>

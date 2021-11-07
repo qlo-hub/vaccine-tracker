@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.fields import CharField, DateField, TimeField
+from django.forms import widgets
 from django.forms.fields import ChoiceField
 from django.urls import reverse
 from django.core.validators import *
@@ -24,6 +25,7 @@ class Physician(models.Model):
     def get_absolute_url(self):
         return reverse('updatePhysician', args=[str(self.pk)])
 
+
 class Patient(models.Model):
     SEX = (
         ('M', 'Male'),
@@ -36,14 +38,15 @@ class Patient(models.Model):
     nick_name = models.CharField(max_length=100, null=True, blank=True)
     sex = models.CharField(max_length=1, null=True, choices=SEX)
     birthdate = models.DateField(null=True)
-    attending_doctor = models.ForeignKey(Physician, related_name="docpatient", on_delete=models.CASCADE)
+    age = models.CharField(max_length=100, null=True, blank=True)
+    attending_doctor = models.ForeignKey(Physician, related_name="docpatient", on_delete=models.CASCADE, null=True)
 
     # Account Portal Deets
-    username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank= True)
-    relationship = models.CharField(max_length=100, null=True)
+    # username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank= True)
+    # relationship = models.CharField(max_length=100, null=True, blank=True)
 
     #Vaccine Certificate Date
-    cert_date = models.DateField(null=True)
+    cert_date = models.DateField(null=True, blank=True)
 
     # Contact Deets
     cell_no = PhoneNumberField(null=True, blank=True, validators=[MaxLengthValidator(13)])
@@ -77,7 +80,15 @@ class Patient(models.Model):
     relation2 = models.CharField(max_length=100, null=True, blank=True)
     c2contact = PhoneNumberField(null=True, blank=True)
     def __str__(self):
-        return self.last_name + ", " + self.first_name
+        return "{}, {}".format(self.last_name, self.first_name)
+
+class PatientUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True)
+    relationship = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return '{} of {}'.format(self.relationship, self.patient)
 
 class Appointment(models.Model):
     STATUS = (

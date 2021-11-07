@@ -1,9 +1,13 @@
+from typing import Text
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core import validators
 from django.conf import settings
 from django.db.models import fields
+from django.db.models.fields import files
+from django.db.models.fields.related import ForeignKey
+from django.db.models.fields.reverse_related import OneToOneRel
 from django.forms import ModelForm, widgets
 from django.forms.fields import DateField, IntegerField
 from django.forms.widgets import *
@@ -74,6 +78,12 @@ class CreateRecordFormPatient(ModelForm):
             'suffix': TextInput(attrs={'class': 'form-control', 'placeholder': 'Suffix'}),
             'nick_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Nickname'}),
             'sex': Select(attrs={'class': 'form-control', 'placeholder': 'Sex'}),
+            'age': HiddenInput(attrs={'type': 'hidden'}),
+
+            'username': HiddenInput(attrs={'type': 'hidden'}),
+            'relationship': TextInput(attrs={'class': 'form-control', 'placeholder': 'Relationship'}),
+
+            'cert_date': HiddenInput(attrs={'type': 'hidden'}),
             
             'attending_doctor': Select(attrs={'class': 'form-control', 'placeholder': 'Attending Doctor'}),
             'landline': TextInput(attrs={'class': 'form-control', 'placeholder': 'Home/Landline'}),
@@ -121,12 +131,19 @@ class AppointmentForm(ModelForm):
         }
 
 class PortalForm(UserCreationForm):
+    password1 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}))
+    password2 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'required': True,}))
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ('username', 'email', 'password1', 'password2')
         widgets = {
-            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username', 'required': True}),
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
-            'password1': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}),
-            'password2': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'required': True,}),
+        }
+class PatientUserForm(ModelForm):
+    class Meta:
+        model = PatientUser
+        fields = ('relationship',)
+        widgets = {
+            'relationship': TextInput(attrs={'class': 'form-control', 'placeholder': 'Relationship'}),
         }

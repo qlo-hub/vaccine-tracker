@@ -1,0 +1,32 @@
+{% extends 'patientmonitoring/main.html' %}
+{% block content %}
+
+<nav class="navbar navbar-expand-xl" style="background-color: rgb(214, 214, 214);">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse me-auto" id="navbarTogglerDemo02">
+        <div style="margin-right: auto; margin-top: 10px;">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-custom">
+            <li class="nav-item" style="margin-right: 5px">
+              <h2>{{patient.first_name}}</h2>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <h2>{{patient.last_name}}</h2>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top: 10px;">({{patient.nick_name}})</h5></i>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top:10px;">{{age}}</h5></i>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top:10px;">{{patient.sex}}</h5></i>
+            </li>
+            <li class="nav-item" style="margin-right: 20px">
+              <i><h5 style="margin-top:10px;">{{patient.birthdate}}</h5></i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</nav>
+{% endblock content %}

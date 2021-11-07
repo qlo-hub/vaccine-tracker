@@ -7,3 +7,4 @@ from .models import *
 admin.site.register(Patient)
 admin.site.register(Physician)
 admin.site.register(Appointment)
+admin.site.register(PatientUser)

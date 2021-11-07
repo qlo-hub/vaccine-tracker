@@ -1,4 +1,4 @@
-{% extends 'patientmonitoring/main.html' %}
+{% include 'patientmonitoring/info_header.html' %}
 
 {% block content %}
 <style>
@@ -46,9 +46,9 @@
                     <td class="table-warning">Sex</td>
                     <td colspan="2">{{patient_form.sex}}</td>
                     <td class="table-warning" colspan="2">Date of Birth</td>
-                    <td colspan="2" oninput="format()">{{patient_form.birthdate}}</td>
+                    <td colspan="2" onchange="format()">{{patient_form.birthdate}}</td>
                     <td class="table-warning">Age</td>
-                    <td id="age"></td>
+                    <td id="age">{{age}}</td>
                   </tr>
                   <tr>
                     <td class="table-warning" style="text-align: left;"><b>Contact #</b></td>
@@ -143,21 +143,47 @@
     var day = new Date(dob).getDate();
 
     var curr = new Date();
+    var currd = curr.getDate();
+    var currm = curr.getMonth();
+    var curry = curr.getFullYear();
 
-    var d = curr.getDate();
-    var m = curr.getMonth() - month + 1;
-    if(d < day){
-      m -= 1;
+    // --Years--
+    var y = curry - year;
+
+    // --Months-- 
+    if(month <= currm){
+     var m = currm - month;
+    } else{
+      y--;
+     var m = 12 + currm - month;
     }
-    var y = curr.getFullYear() - year;
+    // --Days--
+    if(day <= currm){
+     var d = currd - day;
+    } else{
+      m--;
+     var d = 31 + currd - day;
+      if(m < 0){
+        m = 11;
+        y--;
+      }
+    }
     
 
     if(!isNaN(m) && !isNaN(y)){
-      document.getElementById('age').innerHTML = y + " Y " + m + " M ";
+      // if(y == 0){
+      //   if(m == 0){
+      //     var w = d / 7;
+      //     d %= 7;
+      //     document.getElementById('age').innerHTML = w + "weeks" + d + "days";
+      //   }
+      // }
+      document.getElementById('age').innerHTML = y + " year " + m + " month ";
     }
     else{
       document.getElementById('age').innerHTML = " ";
     }
+  
   }
 
   // --Check box for Emergency Contact--

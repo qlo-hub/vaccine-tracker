@@ -1,44 +1,9 @@
-{% extends 'patientmonitoring/main.html' %}
+{% include 'patientmonitoring/info_header.html' %}
 
 {% block content %}
 <style>
 </style>
-
-<nav class="navbar navbar-expand-xl" style="background-color: rgb(214, 214, 214);">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse me-auto" id="navbarTogglerDemo02">
-        <div style="margin-right: auto; margin-top: 10px;">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-custom">
-            <li class="nav-item" style="margin-right: 5px">
-              <h2>{{patient.first_name}}</h2>
-            </li>
-            <li class="nav-item" style="margin-right: 20px">
-              <h2>{{patient.last_name}}</h2>
-            </li>
-            <li class="nav-item" style="margin-right: 20px">
-              <i><h5 style="margin-top: 10px;">({{patient.nick_name}})</h5></i>
-            </li>
-            <li class="nav-item" style="margin-right: 20px">
-              <i><h5 style="margin-top: 10px;">{{patient.age}} years {{months}} months</h5></i>
-            </li>
-            <li class="nav-item" style="margin-right: 20px">
-              <i><h5 style="margin-top: 10px;">{{patient.sex}}</h5></i>
-            </li>
-            <li class="nav-item" style="margin-right: 20px">
-              <i><h5 style="margin-top: 10px;">{{patient.birthdate}}</h5></i>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-</nav> 
-  
 <div class="container-fluid" style="padding:1%; ">
-    <div class="row">
-      {% for message in messages %}
-      <p id='messages' style="color: green; text-align: center;"> {{ message }}  </p>
-      {% endfor %}
-    </div>
     <div class="row">
         <div class="col-lg-2" style="background-color: rgb(255, 255, 255);display: flex; justify-content: center; align-items: center; padding-top: 8%; padding-bottom: 8%;">
           <div class="btn-group-vertical" style="display: block;">
@@ -76,12 +41,33 @@
                   <td>{{appointment.location}}</td>
                 </tr>
               </tbody>
-              {% endif %}
+                {% endif %}
               {% endfor %}
             </table>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#schedule" style="margin-top: 2%;">
               Schedule Appointment
             </button>
+            {% if messages %}
+              {% for message in messages %}
+                {% if message.tags == 'success' %}
+                  <div class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="message">
+                      &nbsp;{{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>
+                {% elif message.tags == 'error' %}
+                  <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+                    <i class="fas fa-times-circle"></i>
+                    <div class="message">
+                      &nbsp;{{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>  
+                {% endif %}
+              {% endfor %}  
+            {% endif %}
             <form action="" method="post">
               {% csrf_token %}
               <div class="modal fade" id="schedule" tabindex="-1" aria-labelledby="Schedule Appointment" aria-hidden="true">
@@ -108,13 +94,8 @@
                 </div>
               </div>
             </form>
-            
-            
           </div>
         </div>
-
     </div>
 </div>
-
-
 {% endblock content %}

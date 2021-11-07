@@ -1,4 +1,3 @@
-
 {% load static %}
 {% block content %}
 <!DOCTYPE html>
@@ -18,14 +17,14 @@
 
     <body>
         <div class="wrapper">
-            <link href="{% static 'images/vax-cert-logo.png' %}">
+            <img src="{% static 'images/vax-cert-logo.png' %}" alt="">
             <h1>CHILDCARE PEDIATRICIANS</h1>
             <hr>
             <br>
-            <h2>To Whom This May Concern: </h2>
+            <h2>To Whom This May Concern, </h2>
             <p>
                 This is to certify that <b>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}}</b>,
-                <b>{{patient.age}} years {{months}} months, {{patient.sex}}</b>, of <b>{{patient.city}}</b> has completed the following 
+                <b>{{patient.age}}, {{patient.sex}}</b>, of <b>{{patient.city}}</b> has completed the following 
                 vaccinations: <br>
                 
                 <br> This certificate is being issued upon the request of the above-mentioned for
@@ -33,9 +32,8 @@
 
                 {{patient.attending_doctor}}
             </p>
-
         </div>
     </body>
 </html>
 
-{% endblock %}
+{% endblock content %}

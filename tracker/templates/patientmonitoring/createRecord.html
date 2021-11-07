@@ -33,7 +33,7 @@
         <td class="table-warning" colspan="2">Date of Birth<span style="color: red;">*</span></td>
         <td colspan="2" onchange="format()">{{patient_form.birthdate}}</td>
         <td class="table-warning">Age</td>
-        <td id="age"></td>
+        <td id="age">{{patient_form.age}}</td>
       </tr>
       <tr>
         <td class="table-warning" style="text-align: left;"><b>Contact #</b></td>
@@ -121,22 +121,47 @@
   function format(){
     var dob = document.getElementById('dob').value;
 
-    var month = new Date(dob).getMonth() + 1;
+    var month = new Date(dob).getMonth();
     var year = new Date(dob).getFullYear();
     var day = new Date(dob).getDate();
 
     var curr = new Date();
+    var currd = curr.getDate();
+    var currm = curr.getMonth();
+    var curry = curr.getFullYear();
 
-    var d = curr.getDate();
-    var m = curr.getMonth() - month + 1;
-    if(d < day){
-      m -= 1;
+    // --Years--
+    var y = curry - year;
+
+    // --Months-- 
+    if(month <= currm){
+     var m = currm - month;
+    } else{
+      y--;
+     var m = 12 + currm - month;
     }
-    var y = curr.getFullYear() - year;
+    // --Days--
+    if(day <= currm){
+     var d = currd - day;
+    } else{
+      m--;
+     var d = 31 + currd - day;
+      if(m < 0){
+        m = 11;
+        y--;
+      }
+    }
     
 
     if(!isNaN(m) && !isNaN(y)){
-      document.getElementById('age').innerHTML = y + " Y " + m + " M ";
+      // if(y == 0){
+      //   if(m == 0){
+      //     var w = d / 7;
+      //     d %= 7;
+      //     document.getElementById('age').innerHTML = w + "weeks" + d + "days";
+      //   }
+      // }
+      document.getElementById('age').innerHTML = y + " year " + m + " month ";
     }
     else{
       document.getElementById('age').innerHTML = " ";
