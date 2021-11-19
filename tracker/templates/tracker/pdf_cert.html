@@ -1,0 +1,442 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Vaccine Certificate</title>
+
+        <style type="text/css">
+            body {
+                font-size: 14px;
+            }
+
+            table{
+                border: 0.5px solid black;
+            }
+    
+        </style>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <img src="{% static 'images/vax-cert-logo.png' %}" alt="">
+            <h1>CHILDCARE PEDIATRICIANS</h1>
+            <hr>
+            <br>
+            <h2>To Whom This May Concern, </h2>
+            <p>
+                This is to certify that <b>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}}</b>,
+                <b>{{age}}, {{patient.sex}}</b>, of <b>{{patient.city}}</b> has completed the following 
+                vaccinations: <br>
+
+                <div class="vaccine-table">
+                    <table class="table-bordered align-middle table-sm">
+                          <thead class="thead-warning" style="background-color: rgb(214, 214, 214);">
+                              <tr>
+                                  <td><b>Age</b></td>
+                                  <td><b>Vaccine</b></td>
+                                  <td><b>Dose</b></td>
+                                  <td><b>Brand</b></td>
+                                  <td><b>Date Given</b></td>
+                                  <td><b>Location</b></td>
+                                  <td><b>Remarks</b></td>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td rowspan='2'>Birth</td>
+                                  <td>BCG</td>
+                                  <td>1 of 1</td>
+                                  <td>{{patient.bcg_brand}}</td>
+                                  <td>{{patient.bcg_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.bcg_loc}}</td>
+                                  <td>{{patient.bcg_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Hepatitis B #1</td>
+                                  <td>1 of 3</td>
+                                  <td>{{patient.hepb1_brand}}</td>
+                                  <td>{{patient.hepb1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hepb1_loc}}</td>
+                                  <td>{{patient.hepb1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='6' colspan='1' >2 to 3 Months</td>
+                                  <td>Hepatitis B #2</td>
+                                  <td>2 of 3</td>
+                                  <td>{{patient.hepb2_brand}}</td>
+                                  <td>{{patient.hepb2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hepb2_loc}}</td>
+                                  <td>{{patient.hepb2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>DTaP/DTwP #1</td>
+                                  <td>1 of 5</td>
+                                  <td>{{patient.dt1_brand}}</td>
+                                  <td>{{patient.dt1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.dt1_loc}}</td>
+                                  <td>{{patient.dt1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>IPV/OPV #1</td>
+                                  <td>1 of 5</td>
+                                  <td>{{patient.ip1_brand}}</td>
+                                  <td>{{patient.ip1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.ip1_loc}}</td>
+                                  <td>{{patient.ip1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HiB #1</td>
+                                  <td>1 of 4</td>
+                                  <td>{{patient.hi1_brand}}</td>
+                                  <td>{{patient.hi1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hi1_loc}}</td>
+                                  <td>{{patient.hi1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>PCV #1</td>
+                                  <td>1 of 4</td>
+                                  <td>{{patient.pcv1_brand}}</td>
+                                  <td>{{patient.pcv1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.pcv1_loc}}</td>
+                                  <td>{{patient.pcv1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Rotavirus #1</td>
+                                  <td>1 of 2 (or 3)</td>
+                                  <td>{{patient.rota1_brand}}</td>
+                                  <td>{{patient.rota1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.rota1_loc}}</td>
+                                  <td>{{patient.rota1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='5' colspan='1' >4 to 5 Months</td>
+                                  <td>DTaP/DTwP #2</td>
+                                  <td>2 of 5</td>
+                                  <td>{{patient.dt2_brand}}</td>
+                                  <td>{{patient.dt2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.dt2_loc}}</td>
+                                  <td>{{patient.dt2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>IPV/OPV #2</td>
+                                  <td>2 of 5</td>
+                                  <td>{{patient.ip2_brand}}</td>
+                                  <td>{{patient.ip2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.ip2_loc}}</td>
+                                  <td>{{patient.ip2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HiB #2</td>
+                                  <td>2 of 4</td>
+                                  <td>{{patient.hi2_brand}}</td>
+                                  <td>{{patient.hi2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hi2_loc}}</td>
+                                  <td>{{patient.hi2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>PCV #2</td>
+                                  <td>2 of 4</td>
+                                  <td>{{patient.pcv2_brand}}</td>
+                                  <td>{{patient.pcv2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.pcv2_loc}}</td>
+                                  <td>{{patient.pcv2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Rotavirus #2</td>
+                                  <td>2 of 2 (or 3)</td>
+                                  <td>{{patient.rota2_brand}}</td>
+                                  <td>{{patient.rota2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.rota2_loc}}</td>
+                                  <td>{{patient.rota2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='7' colspan='1' >6 to 7 Months</td>
+                                  <td>Hepatitis B #3</td>
+                                  <td>3 of 3</td>
+                                  <td>{{patient.hepb3_brand}}</td>
+                                  <td>{{patient.hepb3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hepb3_loc}}</td>
+                                  <td>{{patient.hepb3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>DTaP/DTwP #3</td>
+                                  <td>3 of 5</td>
+                                  <td>{{patient.dt3_brand}}</td>
+                                  <td>{{patient.dt3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.dt3_loc}}</td>
+                                  <td>{{patient.dt3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>IPV/OPV #3</td>
+                                  <td>3 of 5</td>
+                                  <td>{{patient.ip3_brand}}</td>
+                                  <td>{{patient.ip3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.ip3_loc}}</td>
+                                  <td>{{patient.ip3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HiB #3</td>
+                                  <td>3 of 4</td>
+                                  <td>{{patient.hi3_brand}}</td>
+                                  <td>{{patient.hi3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hi3_loc}}</td>
+                                  <td>{{patient.hi3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>PCV #3</td>
+                                  <td>3 of 4</td>
+                                  <td>{{patient.pcv3_brand}}</td>
+                                  <td>{{patient.pcv3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.pcv3_loc}}</td>
+                                  <td>{{patient.pcv3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Rotavirus #3</td>
+                                  <td>3 of 3</td>
+                                  <td>{{patient.rota3_brand}}</td>
+                                  <td>{{patient.rota3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.rota3_loc}}</td>
+                                  <td>{{patient.rota3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Influenza #1</td>
+                                  <td>1 of 2</td>
+                                  <td>{{patient.influ1of2_brand}}</td>
+                                  <td>{{patient.influ1of2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.influ1of2_loc}}</td>
+                                  <td>{{patient.influ1of2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='3' colspan='1' >9 Months</td>
+                                  <td>Measles</td>
+                                  <td>1 of 1</td>
+                                  <td>{{patient.measles_brand}}</td>
+                                  <td>{{patient.measles_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.measles_loc}}</td>
+                                  <td>{{patient.measles_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Japanese Encephalitis B #1</td>
+                                  <td>1 of 2 </td>
+                                  <td>{{patient.jap1of2_brand}}</td>
+                                  <td>{{patient.jap1of2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.jap1of2_loc}}</td>
+                                  <td>{{patient.jap1of2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Influenza #1</td>
+                                  <td>2 of 2</td>
+                                  <td>{{patient.influ2of2_brand}}</td>
+                                  <td>{{patient.influ2of2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.influ2of2_loc}}</td>
+                                  <td>{{patient.influ2of2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='7' colspan='1' >12 to 15 Months</td>
+                                  <td>MMR #1</td>
+                                  <td>1 of 2</td>
+                                  <td>{{patient.mmr1_brand}}</td>
+                                  <td>{{patient.mmr1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.mmr1_loc}}</td>
+                                  <td>{{patient.mmr1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Varicella #1</td>
+                                  <td>1 of 2</td>
+                                  <td>{{patient.vari1_brand}}</td>
+                                  <td>{{patient.vari1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.vari1_loc}}</td>
+                                  <td>{{patient.vari1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>DTaP/DTwP Booster #1</td>
+                                  <td>4 of 5</td>
+                                  <td>{{patient.dtbooster1_brand}}</td>
+                                  <td>{{patient.dtbooster1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.dtbooster1_loc}}</td>
+                                  <td>{{patient.dtbooster1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>IPV/OPV Booster #1</td>
+                                  <td>4 of 5</td>
+                                  <td>{{patient.ipbooster1_brand}}</td>
+                                  <td>{{patient.ipbooster1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.ipbooster1_loc}}</td>
+                                  <td>{{patient.ipbooster1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HiB Booster #1</td>
+                                  <td>4 of 4</td>
+                                  <td>{{patient.hibooster1_brand}}</td>
+                                  <td>{{patient.hibooster1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hibooster1_loc}}</td>
+                                  <td>{{patient.hibooster1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>PCV Booster #1</td>
+                                  <td>4 of 4</td>
+                                  <td>{{patient.pcvbooster1_brand}}</td>
+                                  <td>{{patient.pcvbooster1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.pcvbooster1_loc}}</td>
+                                  <td>{{patient.pcvbooster1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Inactivated Hepatitis A #1</td>
+                                  <td>1 of 2</td>
+                                  <td>{{patient.inacthepa1_brand}}</td>
+                                  <td>{{patient.inacthepa1_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.inacthepa1_loc}}</td>
+                                  <td>{{patient.inacthepa1_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>18 to 21 Months</td>
+                                  <td>Inactivated Hepatitis A #2</td>
+                                  <td>2 of 2</td>
+                                  <td>{{patient.inacthepa2_brand}}</td>
+                                  <td>{{patient.inacthepa2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.inacthepa2_loc}}</td>
+                                  <td>{{patient.inacthepa2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='3' colspan='1' >24 Months</td>
+                                  <td>Meninggococcal Vaccine</td>
+                                  <td>1 of 1</td>
+                                  <td>{{patient.mening_brand}}</td>
+                                  <td>{{patient.mening_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.mening_loc}}</td>
+                                  <td>{{patient.mening_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Typhoid</td>
+                                  <td>1 of 1</td>
+                                  <td>{{patient.typhoid_brand}}</td>
+                                  <td>{{patient.typhoid_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.typhoid_loc}}</td>
+                                  <td>{{patient.typhoid_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Japanese Encephalitis B #1</td>
+                                  <td>2 of 2</td>
+                                  <td>{{patient.jap2of2_brand}}</td>
+                                  <td>{{patient.jap2of2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.jap2of2_loc}}</td>
+                                  <td>{{patient.jap2of2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>4 to 6 Years</td>
+                                  <td>DTaP/DTwP Booster #2</td>
+                                  <td>5 of 5</td>
+                                  <td>{{patient.dtbooster2_brand}}</td>
+                                  <td>{{patient.dtbooster2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.dtbooster2_loc}}</td>
+                                  <td>{{patient.dtbooster2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='4' colspan='1' >10 Years</td>
+                                  <td>IPV/OPV Booster #2</td>
+                                  <td>5 of 5</td>
+                                  <td>{{patient.ipbooster2_brand}}</td>
+                                  <td>{{patient.ipbooster2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.ipbooster2_loc}}</td>
+                                  <td>{{patient.ipbooster2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>MMR #2</td>
+                                  <td>2 of 2</td>
+                                  <td>{{patient.mmr2_brand}}</td>
+                                  <td>{{patient.mmr2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.mmr2_loc}}</td>
+                                  <td>{{patient.mmr2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Varicella #2</td>
+                                  <td>2 of 2</td>
+                                  <td>{{patient.vari2_brand}}</td>
+                                  <td>{{patient.vari2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.vari2_loc}}</td>
+                                  <td>{{patient.vari2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Td/Tdap Booster #3</td>
+                                  <td>every 10 yrs</td>
+                                  <td>{{patient.tdbooster3_brand}}</td>
+                                  <td>{{patient.tdbooster3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.tdbooster3_loc}}</td>
+                                  <td>{{patient.tdbooster3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='2' colspan='1' >9 to 14 Years</td>
+                                  <td>HPV #1</td>
+                                  <td>1 of 2</td>
+                                  <td>{{patient.hpv1of2_brand}}</td>
+                                  <td>{{patient.hpv1of2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hpv1of2_loc}}</td>
+                                  <td>{{patient.hpv1of2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HPV #2</td>
+                                  <td>2 of 2</td>
+                                  <td>{{patient.hpv2of2_brand}}</td>
+                                  <td>{{patient.hpv2of2_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hpv2of2_loc}}</td>
+                                  <td>{{patient.hpv2of2_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td rowspan='3' colspan='1' >15 and Up</td>
+                                  <td>HPV #1</td>
+                                  <td>1 of 3</td>
+                                  <td>{{patient.hpv1of3_brand}}</td>
+                                  <td>{{patient.hpv1of3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hpv1of3_loc}}</td>
+                                  <td>{{patient.hpv1of3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HPV #2</td>
+                                  <td>2 of 3</td>
+                                  <td>{{patient.hpv2of3_brand}}</td>
+                                  <td>{{patient.hpv2of3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hpv2of3_loc}}</td>
+                                  <td>{{patient.hpv2of3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>HPV #3</td>
+                                  <td>3 of 3</td>
+                                  <td>{{patient.hpv3of3_brand}}</td>
+                                  <td>{{patient.hpv3of3_date | date:"m/d/Y"}}</td>
+                                  <td>{{patient.hpv3of3_loc}}</td>
+                                  <td>{{patient.hpv3of3_remarks}}</td>
+                              </tr>
+                              <tr>
+                                  <td>Annual</td>
+                                  <td>Influenza</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+                              <tr>
+                                  <td>Others/Catch-up</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+                          </tbody>
+                    </table>
+                  </div>
+                
+                <br> This certificate is being issued upon the request of the above-mentioned for
+                whatever purpose it may serve, except those of a medico-legal-nature.<br><br><br>
+
+                {{patient.attending_doctor}}
+            </p>
+        </div>
+    </body>
+</html>
+
+{% endblock content %}

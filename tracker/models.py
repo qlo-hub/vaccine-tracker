@@ -41,10 +41,6 @@ class Patient(models.Model):
     age = models.CharField(max_length=100, null=True, blank=True)
     attending_doctor = models.ForeignKey(Physician, related_name="docpatient", on_delete=models.CASCADE, null=True)
 
-    # Account Portal Deets
-    # username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank= True)
-    # relationship = models.CharField(max_length=100, null=True, blank=True)
-
     #Vaccine Certificate Date
     cert_date = models.DateField(null=True, blank=True)
 
@@ -59,7 +55,6 @@ class Patient(models.Model):
     city = models.CharField(max_length=100, null=True, blank=True)
     region = models.CharField(max_length=100, null=True, blank=True)
     zip = models.IntegerField(null=True, blank=True)
-    
     
     # Mother
     mfname = models.CharField(max_length=100, null=True, blank=True)
@@ -79,6 +74,7 @@ class Patient(models.Model):
     c2full_name = models.CharField(max_length=100, null=True, blank=True)
     relation2 = models.CharField(max_length=100, null=True, blank=True)
     c2contact = PhoneNumberField(null=True, blank=True)
+
     def __str__(self):
         return "{}, {}".format(self.last_name, self.first_name)
 
@@ -89,6 +85,7 @@ class PatientUser(models.Model):
 
     def __str__(self):
         return '{} of {}'.format(self.relationship, self.patient)
+
 
 class Appointment(models.Model):
     STATUS = (
@@ -108,3 +105,25 @@ class Appointment(models.Model):
 
     def __str__(self):
         return str(self.patient)
+
+class Vaccine(models.Model):
+    LOCATION = (
+        ('R thigh', 'R thigh'), ('L thigh', 'L thigh'), ('R arm ', 'R arm'),
+        ('L arm', 'L arm'), ('R buttocks', 'R buttocks'), ('L buttocks', 'L buttocks'),
+    )
+    age = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=50, null=True)
+    dose = models.CharField(max_length=50, null=True)
+    brand = models.CharField(max_length=50, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    location = models.CharField(max_length=50, null=True, blank=True, choices=LOCATION)
+    remarks = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return "{}".format(self.name)
+class PatientVaccine(models.Model):
+    patient = models.ForeignKey(Patient, null=True, on_delete=models.CASCADE)
+    vaccine = models.ForeignKey(Vaccine, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{} for {}".format(self.vaccine, self.patient)

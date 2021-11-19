@@ -1,0 +1,69 @@
+{% include 'tracker/info_header.html' %}
+
+{% block content %}
+
+<style>
+  .form-control{
+    margin-bottom: 10px;
+  }
+  .portal-fields .btn{
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="container-fluid" style="padding:1%; ">
+    <div class="row">
+        <div class="col-lg-2" style="background-color: rgb(255, 255, 255); display: flex; justify-content: center; margin-top: 5%;">
+            <div class="btn-group-vertical" style="display: block;">
+              <a class="btn btn-outline-primary" href="{% url 'patient' patient.id %}">Profile</a>
+              <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
+              <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
+              <a class="btn btn-outline-primary" href="#">Portal</a>
+              <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
+            </div>
+        </div>
+        <div class="col-lg-10" style="background-color: white; padding-top: 8%; padding-bottom: 8%;">
+            <div class="portal-fields">
+                <div class="col-lg-6" style="margin-left: 15%;">
+                  <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="col-sm-8">
+                      {{portal_form.username}}
+                      {{portal_form.email}}
+                      {{portal_form.password1}}
+                      {{portal_form.password2}}
+                      {{patient_form.relationship}}
+                    </div>
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="{% url 'password_reset' %}" class="btn btn-warning">Forgot</a>
+                  </form>
+                  {% if messages %}
+                    {% for message in messages %}
+                      {% if message.tags == 'success' %}
+                        <div class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                          <i class="fas fa-check-circle"></i>
+                          <div class="message">
+                            &nbsp;{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                        </div>
+                      {% elif message.tags == 'error' %}
+                        <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+                          <i class="fas fa-times-circle"></i>
+                          <div class="message">
+                            &nbsp;{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                        </div>  
+                      {% endif %}
+                    {% endfor %}  
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+{% endblock content %}

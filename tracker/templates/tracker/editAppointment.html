@@ -1,0 +1,58 @@
+{% include 'tracker/info_header.html' %}
+
+{% block content %}
+<style>
+</style>
+<div class="container-fluid" style="padding:1%; ">
+    <div class="row">
+        <div class="col-lg-2" style="background-color: rgb(255, 255, 255); display: flex; justify-content: center; margin-top: 5%;">
+          <div class="btn-group-vertical" style="display: block;">
+            <a class="btn btn-outline-primary" href="{% url 'patient' patient.id %}">Profile</a>
+            <a class="btn btn-outline-primary" href="#">Appointment</a>
+            <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
+            <a class="btn btn-outline-primary" href="{% url 'portal' patient.id %}">Portal</a>
+            <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
+          </div>
+        </div>
+        
+        <div class="col-lg-10" style="background-color: white; padding-top: 8%; padding-bottom: 8%;">
+          <div class="appointment-table">
+            <form action="" method="post">
+              {% csrf_token %}
+              <table class="table-bordered align-middle table-sm" style="width: 100%;">
+                <thead class="thead-warning" style="background-color: rgb(214, 214, 214);">
+                  
+                  <tr>
+                    <td>Status</td>
+                    <td>Date</td>
+                    <td>Time</td>
+                    <td>Doctor</td>
+                    <td>Visit</td>
+                    <td>Loc</td>
+                  </tr>
+                </thead>
+                {% for appointment in appointments %}
+                  {% if appointment.patient == patient  %}
+                <tbody>
+                  <tr>
+                    <td>{{edit_appointment_form.status}}</td>
+                    <td>{{appointment.date|date:"m/d/Y"}}</td>
+                    <td>{{appointment.time}}</td>
+                    <td>{{appointment.doctor}}</td>
+                    <td>{{appointment.visit}}</td>
+                    <td>{{appointment.location}}</td>
+                  </tr>
+                </tbody>
+                  {% endif %}
+                {% endfor %}
+              </table>
+              <button type="submit" class="btn btn-success" style="margin-top: 12px;">Save</button>
+              <a class="btn btn-danger" style="margin-top: 12px;" href="{% url 'appointment' patient.id %}">
+                Cancel
+              </a>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

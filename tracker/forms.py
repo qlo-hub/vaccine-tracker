@@ -106,9 +106,20 @@ class CreateRecordFormPatient(ModelForm):
             'c1full_name': TextInput(attrs={'class': 'form-control', 'id': 'c1full_name', 'placeholder': 'Full Name'}),
             'relation1': TextInput(attrs={'class': 'form-control', 'id': 'relation1', 'placeholder': 'Relation'}),
             'c2full_name': TextInput(attrs={'class': 'form-control', 'id': 'c2full_name', 'placeholder': 'Full Name'}),
-            'relation2': TextInput(attrs={'class': 'form-control', 'id': 'relation2', 'placeholder': 'Relation'}),     
+            'relation2': TextInput(attrs={'class': 'form-control', 'id': 'relation2', 'placeholder': 'Relation'}),   
         }
 
+class CertDateForm(ModelForm):
+    cert_date = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm-dd-yyyy'},
+            format='%m-%d-%Y',
+        ),
+        input_formats=['%m-%d-%Y']
+    )
+    class Meta:
+        model = Patient
+        fields = ('cert_date',)
 
 class AppointmentForm(ModelForm):
     date = forms.DateField(
@@ -130,6 +141,14 @@ class AppointmentForm(ModelForm):
             'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
         }
 
+class EditAppointmentForm(ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ('status','patient')
+        widgets = {
+            'patient': HiddenInput(attrs={'type': 'hidden'}),
+        }
+
 class PortalForm(UserCreationForm):
     password1 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}))
     password2 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'required': True,}))
@@ -140,6 +159,7 @@ class PortalForm(UserCreationForm):
             'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username', 'required': True}),
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
         }
+
 class PatientUserForm(ModelForm):
     class Meta:
         model = PatientUser
@@ -147,3 +167,22 @@ class PatientUserForm(ModelForm):
         widgets = {
             'relationship': TextInput(attrs={'class': 'form-control', 'placeholder': 'Relationship'}),
         }
+
+class PatientVaccineForm(ModelForm):
+    date = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm-dd-yyyy'},
+            format='%m-%d-%Y',
+        ),
+        input_formats=['%m-%d-%Y']
+    )
+    class Meta:
+        model = Vaccine
+        fields = ('brand', 'date', 'location', 'remarks')
+        widgets = {
+            'brand': TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}),
+            'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
+        }
+
+

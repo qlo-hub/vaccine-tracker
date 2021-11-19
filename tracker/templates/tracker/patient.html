@@ -1,0 +1,133 @@
+{% include 'tracker/info_header.html' %}
+{% block content %}
+<style>
+
+</style>
+
+<div class="container-fluid" style="padding:1%;">
+  <div class="row">
+      <div class="col-lg-2" style="background-color: rgb(255, 255, 255); display: flex; justify-content: center; margin-top: 5%;">
+        <div class="btn-group-vertical" style="display: block;">
+          <a class="btn btn-outline-primary" href="#">Profile</a>
+          <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
+          <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
+          <a class="btn btn-outline-primary" href="{% url 'portal' patient.id %}">Portal</a>
+          <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
+        </div>
+      </div>
+
+      <div class="col-lg-10" style="background-color: white">
+        <div class="create-record-form">
+          <table class="table table-bordered table-sm">
+              <tbody>
+                <tr>
+                  <td class="table-warning" style="text-align: left;"><b>Name</b></td>
+                  <td class="table-warning">Nickname</td>
+                  <td>{{patient.nick_name}}</td>
+                  <td class="table-warning" colspan="2">Attending Doctor</td>
+                  <td colspan="2">{{patient.attending_doctor}}</td>
+                  <td class="table-warning">Record #</td>
+                  <td class="table-warning" style="text-align: left;">{{patient.id}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning">First</td>
+                  <td colspan="2">{{patient.first_name}}</td>
+                  <td class="table-warning">Last</td>
+                  <td>{{patient.last_name}}</td>
+                  <td class="table-warning">Middle</td>
+                  <td>{{patient.middle_name}}</td>
+                  <td class="table-warning">Suffix</td>
+                  <td>{{patient.suffix}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning">Sex</td>
+                  <td colspan="2">{{patient.sex}}</td>
+                  <td class="table-warning" colspan="2">Date of Birth</td>
+                  <td colspan="2">{{patient.birthdate}}</td>
+                  <td id="age" class="table-warning">Age</td>
+                  <td>{{age}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning" style="text-align: left;"><b>Contact #</b></td>
+                  <td class="table-warning">Mobile</td>
+                  <td colspan="2">{{patient.cell_no}}</td>
+                  <td class="table-warning" colspan="2">Landline</td>
+                  <td>{{patient.landline}}</td>
+                  <td class="table-warning">Email</td>
+                  <td colspan="2">{{patient.email}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning" style="text-align: left;"><b>Address</b></td>
+                  <td class="table-warning" colspan="3">House/Unit No/LtBlk/Street</td>
+                  <td colspan="2">{{patient.house_no}}</td>
+                  <td class="table-warning">Barangay</td>
+                  <td colspan="2">{{patient.barangay}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning" colspan="2">City</td>
+                  <td colspan="2">{{patient.city}}</td>
+                  <td class="table-warning" colspan="2">Region</td>
+                  <td>{{patient.region}}</td>
+                  <td class="table-warning">Zip Code</td>
+                  <td>{{patient.zip}}</td>
+                </tr>
+                <tr>
+                    <td class="table-warning" style="text-align: left;" colspan="9"><b>Parent's Information</b></td>
+                </tr>
+                <tr>
+                    <td class="table-warning">Mother</td>
+                    <td class="table-warning">First Name</td>
+                    <td>{{patient.mfname}}</td>
+                    <td class="table-warning">Last Name</td>
+                    <td>{{patient.mlname}}</td>
+                    <td class="table-warning">Contact #</td>
+                    <td>{{patient.mcontact}}</td>
+                    <td class="table-warning">Email</td>
+                    <td>{{patient.memail}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning">Father</td>
+                  <td class="table-warning">First Name</td>
+                  <td>{{patient.ffname}}</td>
+                  <td class="table-warning">Last Name</td>
+                  <td>{{patient.flname}}</td>
+                  <td class="table-warning">Contact #</td>
+                  <td>{{patient.fcontact}}</td>
+                  <td class="table-warning">Email</td>
+                  <td>{{patient.femail}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning" style="text-align: left;"><b>Emergency Contact</b></td>
+                  <td class="table-warning" colspan="2">
+                    <input type="checkbox" name="flexRadioDefault" id="contact" checked disabled>
+                    <label for="contact">Same as parent's information</label>
+                  </td>
+                  <td class="table-warning" colspan="6"></td>
+                </tr>
+                <tr>
+                  <td class="table-warning">Name</td>
+                  <td colspan="4">{{patient.c1full_name}}</td>
+                  <td class="table-warning">Relation</td>
+                  <td>{{patient.relation1}}</td>
+                  <td class="table-warning">Contact #</td>
+                  <td>{{patient.c1contact}}</td>
+                </tr>
+                <tr>
+                  <td class="table-warning">Name</td>
+                  <td colspan="4">{{patient.c2full_name}}</td>
+                  <td class="table-warning">Relation</td>
+                  <td>{{patient.relation2}}</td>
+                  <td class="table-warning">Contact #</td>
+                  <td>{{patient.c2contact}}</td>
+                </tr>
+            </tbody>
+          </table>
+          <a class="btn btn-warning" href="{% url 'editPatient' patient.id %}">Edit</a>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}

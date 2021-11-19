@@ -7,7 +7,7 @@ from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.mail import send_mail
-from vaccine_tracker.settings import EMAIL_HOST_USER
+from vaccine_tracker.settings import DATABASES, EMAIL_HOST_USER
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
@@ -17,6 +17,16 @@ import datetime
 from xhtml2pdf import pisa
 from easy_pdf.views import PDFTemplateResponseMixin, PDFTemplateView
 from django.views.generic.detail import DetailView
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
 
 
 # Create your views here.
@@ -33,9 +43,9 @@ def registerPage(request):
                 raw_password = form.cleaned_data.get('password1')
                 subject = 'Account Registration'
                 message = 'Hi Mr./Ms.' + last_name + '! Here are your account credentials for our application.' + ' Username: ' + username + ' Password: ' + raw_password
-                recepient = str(form.cleaned_data.get('email'))
+                recipient = str(form.cleaned_data.get('email'))
             
-                send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently = False)
+                send_mail(subject, message, EMAIL_HOST_USER, [recipient], fail_silently = False)
 
                 messages.success(request, 'Account was created for ' + username)
                 return redirect('home')
@@ -43,11 +53,43 @@ def registerPage(request):
                 messages.error(request, "Unsuccessful registration. Invalid information.")
                 
         context = {'form':form}
-        return render(request, 'patientmonitoring/register.html', context)
+        return render(request, 'tracker/register.html', context)
+
+def password_reset(request):
+    password_reset_form = PasswordResetForm()
+
+    if(request.method == 'POST'):
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            email = password_reset_form.cleaned_data['email']
+            users = User.objects.filter(Q(email=email))
+            if users.exists():
+                for user in users:
+                    subject = 'Password Reset Requested'
+                    email_template_name = 'tracker/password/password_reset_email.txt'
+                    context = {
+                        'email': user.email,
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'Website',
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'user': user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }
+                    mail = render_to_string(email_template_name, context)
+                    try:
+                        send_mail(subject, mail, EMAIL_HOST_USER, [user.email], fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found!')
+                    return redirect('password_reset/done')
+    data = {
+        'password_reset_form': password_reset_form
+    }
+    return render(request, 'tracker/password/password_reset.html', data)
 
 @login_required(login_url='login')
 def notifsPage(request):
-    return render(request,'patientmonitoring/notifs.html')
+    return render(request,'tracker/notifs.html')
 
 def logoutUser(request):
 	logout(request)
@@ -70,7 +112,7 @@ def loginPage(request):
                 else:
                     messages.info(request, 'Username or password is incorrect. Please try again.')
         context = {}
-        return render(request, 'patientmonitoring/login.html', context)
+        return render(request, 'tracker/login.html', context)
 
 
 
@@ -85,7 +127,7 @@ def homePage(request):
         'patients': patients, 'physicians': physicians , 'patientFilter': patientFilter,
     }
 
-    return render(request, "patientmonitoring/home.html", data)
+    return render(request, "tracker/home.html", data)
 
 #--CREATE RECORD VIEW--
 @login_required(login_url='login')
@@ -112,7 +154,7 @@ def createRecord(request):
     context = {'patient_form':patient_form,
                 'latest_id': latest_id,
     }
-    return render(request, "patientmonitoring/createRecord.html", context)
+    return render(request, "tracker/createRecord.html", context)
     
 @login_required(login_url='login')
 def patient(request, pk):
@@ -127,7 +169,7 @@ def patient(request, pk):
     data = {
         'patient': patient, 'age': age,
     }
-    return render(request, 'patientmonitoring/patient.html', data)
+    return render(request, 'tracker/patient.html', data)
 
 @login_required(login_url='login')
 def editPatient(request, pk):
@@ -156,7 +198,7 @@ def editPatient(request, pk):
         'age': age,
     }
 
-    return render(request, 'patientmonitoring/editPatient.html', data)
+    return render(request, 'tracker/editPatient.html', data)
 
 @login_required(login_url='login')
 def appointment(request, pk):
@@ -187,7 +229,44 @@ def appointment(request, pk):
         'age': age,
     }
 
-    return render(request, 'patientmonitoring/appointment.html', data)
+    return render(request, 'tracker/appointment.html', data)
+
+@login_required(login_url='login')
+def editAppointment(request, pk):
+    patient = Patient.objects.get(id=pk)
+    #edit_appointment_form = EditAppointmentForm(instance=patient)
+
+    appointments = Appointment.objects.all()
+
+    # -- Age (X Years Y Months) --
+    curr_date = datetime.date.today()
+    months = curr_date.month - patient.birthdate.month
+    years = curr_date.year - patient.birthdate.year
+    age = "{} year {} month".format(years, months)
+
+    if (request.method == "GET"):
+        edit_appointment_form = EditAppointmentForm(instance=patient)
+    else:
+        edit_appointment_form = EditAppointmentForm(request.POST, instance=patient)
+        if edit_appointment_form.is_valid():
+            edit_appointment_form.save()
+
+        return redirect('/appointment/' + pk)
+
+    # if(request.method == "POST"):
+    #     edit_appointment_form = EditAppointmentForm(request.POST, instance=patient)
+    #     if edit_appointment_form.is_valid():
+    #         edit_appointment_form.save()
+       
+    #     return redirect('/appointment/' + pk)
+
+    data = {
+        'patient': patient,
+        'edit_appointment_form': edit_appointment_form,
+        'appointments': appointments,
+        'age': age,
+    }
+    return render(request, 'tracker/editAppointment.html', data)
 
 
 @login_required(login_url='login')
@@ -205,15 +284,16 @@ def portal(request, pk):
     if request.method == 'POST':
         portal_form = PortalForm(request.POST)
         patient_form = PatientUserForm(request.POST)
-        if portal_form.is_valid() and patient_form.is_valid():
-            user = portal_form.save()
-            profile = patient_form.save(commit=False)
-            profile.user = user
-            profile.patient = patient
-            profile.save()
-            messages.success(request, 'Account Created!')
+        if User.objects.filter(username = request.POST['username']).exists():
+            messages.error(request, 'Username exists.')
         else:
-            messages.error(request, 'Failed to create account.')
+            if portal_form.is_valid() and patient_form.is_valid():
+                user = portal_form.save()
+                profile = patient_form.save(commit=False)
+                profile.user = user
+                profile.patient = patient
+                profile.save()
+                messages.success(request, 'Account Created!')
         return redirect('/portal/' + pk)
     
     data = {
@@ -222,13 +302,13 @@ def portal(request, pk):
         'portal_form': portal_form,
         'patient_form': patient_form,
     }
-    return render(request, 'patientmonitoring/portal.html', data)
+    return render(request, 'tracker/portal.html', data)
 
 @login_required(login_url='login')
 def certificate(request, pk):
     patient = Patient.objects.get(id=pk)
-    
-    cert_date = None
+    cert_date_form = CertDateForm(instance=patient)
+    #cert_date = None
 
     # -- Age (x Years y Months) -- 
     curr_date = datetime.date.today()
@@ -237,24 +317,32 @@ def certificate(request, pk):
     age = "{} year {} month".format(years, months)
 
     if(request.method == "POST"):
-        cert_date = request.POST['sign_cert']
+         cert_date_form = EditAppointmentForm(request.POST, instance=patient)
+         if cert_date_form.is_valid():
+             cert_date_form.save()
+       
+         return redirect('/certificate/' + pk)
 
-    if cert_date:
-        if patient:
-            patient.cert_date = cert_date
-            patient.save()
-        return redirect('/certificate/' + pk)
+    # if(request.method == "POST"):
+    #     cert_date = request.POST.get['sign_cert']
+
+    # if cert_date:
+    #     if patient:
+    #         patient.cert_date = cert_date
+    #         patient.save()
+    #     return redirect('/certificate/' + pk)
 
     data = {
         'patient': patient, 
         'age': age,
         'curr_date': curr_date,
+        'cert_date_form': cert_date_form,
     }
-    return render(request, 'patientmonitoring/certificate.html', data)
+    return render(request, 'tracker/certificate.html', data)
 
 class PdfDetail(PDFTemplateResponseMixin, DetailView):
     model = Patient
-    template_name = 'patientmonitoring/pdf_cert.html'
+    template_name = 'tracker/pdf_cert.html'
     download_filename = 'Vaccine Certificate of {}-{}'.format(model.last_name, model.first_name)
     context_object_name = 'patient'
 
@@ -262,3 +350,49 @@ class PdfDetail(PDFTemplateResponseMixin, DetailView):
     # months = curr_date.month - model.birthdate.month
     # years = curr_date.year - model.birthdate.year
     # age = "{} year {} month".format(years, months)
+
+@login_required(login_url='login')
+def vaccine(request, pk):
+    patient = Patient.objects.get(id=pk)
+    vaccines = Vaccine.objects.all()
+
+    # -- Age (X Years Y Months) --
+    curr_date = datetime.date.today()
+    months = curr_date.month - patient.birthdate.month
+    years = curr_date.year - patient.birthdate.year
+    age = "{} year {} month".format(years, months)
+    
+    data = {
+        'patient': patient, 
+        'vaccines': vaccines,
+        'age': age,
+    }
+    return render(request, 'tracker/vaccine.html', data)
+
+@login_required(login_url='login')
+def editVaccine(request, pk):
+    patient = Patient.objects.get(id=pk)
+    # vaccine_form = PatientVaccineForm(initial={'patient': patient})
+    vaccines = Vaccine.objects.all()
+    vaccine_form = PatientVaccineForm(instance=patient)
+
+    # -- Age (X Years Y Months) --
+    curr_date = datetime.date.today()
+    months = curr_date.month - patient.birthdate.month
+    years = curr_date.year - patient.birthdate.year
+    age = "{} year {} month".format(years, months)
+
+    if(request.method == "POST"):
+        vaccine_form = PatientVaccineForm(request.POST, instance=patient)
+        if vaccine_form.is_valid():
+            vaccine_form.save()
+       
+        return redirect('/vaccine/' + pk)
+    
+    data = {
+        'patient': patient, 
+        'vaccine_form': vaccine_form,
+        'vaccines': vaccines,
+        'age': age,
+    }
+    return render(request, 'tracker/editVaccine.html', data)
