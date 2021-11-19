@@ -17,16 +17,19 @@ import datetime
 from xhtml2pdf import pisa
 from easy_pdf.views import PDFTemplateResponseMixin, PDFTemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from django.utils.decorators import method_decorator
+
 
 
 # Create your views here.
@@ -187,10 +190,8 @@ def editPatient(request, pk):
         if patient_form.is_valid():
             pfname = patient_form.cleaned_data.get('first_name')
             plname = patient_form.cleaned_data.get('last_name')
-
             patient_form.save()
 
-            # messages.success(request, 'Account was created for ' + pfname + plname)
             return redirect('/patient/' + pk)
 
     data = {
@@ -231,12 +232,30 @@ def appointment(request, pk):
 
     return render(request, 'tracker/appointment.html', data)
 
+# @method_decorator(login_required, name='dispatch')
+# class editAppointment(UpdateView, DetailView):
+#     model = Patient
+#     template_name = 'tracker/editAppointment.html'
+#     fields = ['status',]
+
+#     def get_context_data(self, request, pk, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['patient'] = Patient.objects.get(id=pk)
+
+#         # -- Age (X Years Y Months) --
+#         curr_date = datetime.date.today()
+#         months = curr_date.month - patient.birthdate.month
+#         years = curr_date.year - patient.birthdate.year
+#         age = "{} year {} month".format(years, months)
+
+#         return context
+
+
 @login_required(login_url='login')
 def editAppointment(request, pk):
     patient = Patient.objects.get(id=pk)
-    #edit_appointment_form = EditAppointmentForm(instance=patient)
-
     appointments = Appointment.objects.all()
+    edit_appointment_form = EditAppointmentForm(instance=patient)
 
     # -- Age (X Years Y Months) --
     curr_date = datetime.date.today()
@@ -244,21 +263,12 @@ def editAppointment(request, pk):
     years = curr_date.year - patient.birthdate.year
     age = "{} year {} month".format(years, months)
 
-    if (request.method == "GET"):
-        edit_appointment_form = EditAppointmentForm(instance=patient)
-    else:
+    if(request.method == "POST"):
         edit_appointment_form = EditAppointmentForm(request.POST, instance=patient)
         if edit_appointment_form.is_valid():
             edit_appointment_form.save()
-
-        return redirect('/appointment/' + pk)
-
-    # if(request.method == "POST"):
-    #     edit_appointment_form = EditAppointmentForm(request.POST, instance=patient)
-    #     if edit_appointment_form.is_valid():
-    #         edit_appointment_form.save()
        
-    #     return redirect('/appointment/' + pk)
+        return redirect('/appointment/' + pk)
 
     data = {
         'patient': patient,
@@ -266,12 +276,14 @@ def editAppointment(request, pk):
         'appointments': appointments,
         'age': age,
     }
+
     return render(request, 'tracker/editAppointment.html', data)
 
 
 @login_required(login_url='login')
 def portal(request, pk):
     patient = Patient.objects.get(id=pk)
+    patient_user_grp = Group.objects.get(name='Patient User')
     portal_form = PortalForm()
     patient_form = PatientUserForm()
     
@@ -293,6 +305,7 @@ def portal(request, pk):
                 profile.user = user
                 profile.patient = patient
                 profile.save()
+                patient_user_grp.user_set.add(user)
                 messages.success(request, 'Account Created!')
         return redirect('/portal/' + pk)
     
@@ -372,7 +385,6 @@ def vaccine(request, pk):
 @login_required(login_url='login')
 def editVaccine(request, pk):
     patient = Patient.objects.get(id=pk)
-    # vaccine_form = PatientVaccineForm(initial={'patient': patient})
     vaccines = Vaccine.objects.all()
     vaccine_form = PatientVaccineForm(instance=patient)
 
@@ -396,3 +408,23 @@ def editVaccine(request, pk):
         'age': age,
     }
     return render(request, 'tracker/editVaccine.html', data)
+
+@login_required(login_url='login')
+def report(request):
+
+    return render(request, 'tracker/report.html')
+
+@login_required(login_url='login')
+def reminder(request):
+
+    return render(request, 'tracker/reminder.html')
+
+@login_required(login_url='login')
+def staffUpdate(request):
+
+    return render(request, 'tracker/staffUpdate.html')
+
+@login_required(login_url='login')
+def staffCreate(request):
+
+    return render(request, 'tracker/staffCreate.html')

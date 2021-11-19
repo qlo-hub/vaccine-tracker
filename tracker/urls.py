@@ -24,4 +24,9 @@ urlpatterns = [
     path('vaccine/<str:pk>', views.vaccine, name="vaccine"),
     path('editVaccine/<str:pk>', views.editVaccine, name="editVaccine"),
 
+    path('report/', views.report, name='report'),
+    path('reminder/', views.reminder, name='reminder'),
+    path('staffUpdate/', views.staffUpdate, name='staffUpdate'),
+    path('staffCreate/', views.staffCreate, name='staffCreate'),
+
 ]

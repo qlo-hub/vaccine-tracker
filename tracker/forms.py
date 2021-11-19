@@ -124,10 +124,10 @@ class CertDateForm(ModelForm):
 class AppointmentForm(ModelForm):
     date = forms.DateField(
         widget=DateInput(
-            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm-dd-yyyy'},
-            format='%m-%d-%Y',
+            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm/dd/yyyy'},
+            format='%m/%d/%Y',
         ),
-        input_formats=['%m-%d-%Y']
+        input_formats=['%m/%d/%Y']
     )
     class Meta:
         model = Appointment
@@ -135,7 +135,7 @@ class AppointmentForm(ModelForm):
         widgets = {
             'patient': HiddenInput(attrs={'type': 'hidden'}),
             'status': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Status'}),
-            'time': forms.NumberInput(attrs={'type': 'time', 'class': 'form-control', 'placeholder': 'Time'}),
+            'time': forms.NumberInput(attrs={'type': 'time', 'class': 'form-control', 'placeholder': 'Time', 'format': '%I:%M %p'}),
             'doctor': Select(attrs={'class': 'form-control', 'placeholder': 'Doctor'}),
             'visit': TextInput(attrs={'class': 'form-control', 'placeholder': 'Visit'}),
             'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
@@ -144,10 +144,10 @@ class AppointmentForm(ModelForm):
 class EditAppointmentForm(ModelForm):
     class Meta:
         model = Appointment
-        fields = ('status','patient')
-        widgets = {
-            'patient': HiddenInput(attrs={'type': 'hidden'}),
-        }
+        fields = ('status',)
+        # widgets = {
+        #     'patient': HiddenInput(attrs={'type': 'hidden'}),
+        # }
 
 class PortalForm(UserCreationForm):
     password1 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}))
@@ -169,20 +169,17 @@ class PatientUserForm(ModelForm):
         }
 
 class PatientVaccineForm(ModelForm):
-    date = forms.DateField(
-        widget=DateInput(
-            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm-dd-yyyy'},
-            format='%m-%d-%Y',
-        ),
-        input_formats=['%m-%d-%Y']
+    LOCATION = (
+    ('R thigh', 'R thigh'), ('L thigh', 'L thigh'), ('R arm ', 'R arm'),
+    ('L arm', 'L arm'), ('R buttocks', 'R buttocks'), ('L buttocks', 'L buttocks'),
     )
+    location = forms.ChoiceField(choices=LOCATION)
     class Meta:
         model = Vaccine
         fields = ('brand', 'date', 'location', 'remarks')
         widgets = {
-            'brand': TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}),
-            'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
-            'remarks': TextInput(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
+        #     'brand': TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}),
+             'date': TextInput(attrs={'placeholder': 'MM/DD/YYYY'})
+        #     'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
+        #     'remarks': TextInput(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
         }
-
-

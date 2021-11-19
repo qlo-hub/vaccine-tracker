@@ -121,9 +121,11 @@ class Vaccine(models.Model):
 
     def __str__(self):
         return "{}".format(self.name)
+        
 class PatientVaccine(models.Model):
     patient = models.ForeignKey(Patient, null=True, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, null=True, on_delete=models.CASCADE)
+    
 
     def __str__(self):
         return "{} for {}".format(self.vaccine, self.patient)

@@ -17,7 +17,8 @@ class PatientFilter(django_filters.FilterSet):
     last_name = CharFilter(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}), 
                             lookup_expr='icontains', label='Last Name'
     )
-    birthdate = DateFilter(widget=NumberInput(attrs={'type': 'date','class': 'form-control', 'placeholder': 'Date of Birth'}))
+    birthdate = DateFilter(widget=NumberInput(attrs={'type': 'date','class': 'form-control', 'placeholder': 'Date of Birth'})
+    ,input_formats=['%m-%d-%Y'])
 
     class Meta:
         model = Patient

@@ -32,10 +32,10 @@
                             <td><b>Remarks</b></td>
                         </tr>
                     </thead>
-                    <tbody id="iter">
+                    <tbody>
                         {% for vaccine in vaccines %}
                         <tr>
-                            <td id='age'>{{vaccine.age}}</td>
+                            <td>{{vaccine.age}}</td>
                             <td>{{vaccine.name}}</td>
                             <td>{{vaccine.dose}}</td>
                             <td>{{vaccine.brand}}</td>
@@ -52,9 +52,5 @@
     </div>
 </div>
 
-<!-- <script>
-    var span = $("table td:contains('Birth')").length;
-    console.log(span);
-    
-</script> -->
+
 {% endblock content %}
