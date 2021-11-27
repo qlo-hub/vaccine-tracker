@@ -183,3 +183,49 @@ class PatientVaccineForm(ModelForm):
         #     'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
         #     'remarks': TextInput(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
         }
+
+class StaffCreateForm(UserCreationForm):
+    password1 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}))
+    password2 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'required': True,}))
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+        widgets = {
+            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username', 'required': True}),
+            'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
+        }
+
+class DoctorForm(ModelForm):
+    CAN_REG = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+    )
+    date_start = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'date-start', 'placeholder': 'Date Start (MM/DD/YYYY)'},
+            format='%m/%d/%Y',
+        ),
+        input_formats=['%m/%d/%Y']
+    )
+    date_end = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'date-end', 'placeholder': 'Date End (MM/DD/YYYY)'},
+            format='%m/%d/%Y',
+        ),
+        input_formats=['%m/%d/%Y']
+    )
+    cell_no = PhoneNumberField(
+        widget=PhoneNumberInternationalFallbackWidget, required=False
+    )
+    cell_no.widget.attrs = {'class': 'form-control', 'id': 'cell_no', 'placeholder': 'Contact (+63)'}
+    can_reg = ChoiceField(choices=CAN_REG, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Can Register?'}))
+    class Meta:
+        model = Physician
+        exclude = ('user', )
+        widgets = {
+            'prefix': TextInput(attrs={'class': 'form-control', 'placeholder': 'Prefix',}),
+            'last_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'first_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+            'title': TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
+            'doc_type': TextInput(attrs={'class': 'form-control', 'placeholder': 'Type'}), 
+        }

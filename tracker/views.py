@@ -421,10 +421,36 @@ def reminder(request):
 
 @login_required(login_url='login')
 def staffUpdate(request):
+    doc_grp = Group.objects.get(name='Doctor')
 
     return render(request, 'tracker/staffUpdate.html')
 
 @login_required(login_url='login')
 def staffCreate(request):
+    doc_grp = Group.objects.get(name='Doctor')
+    staff_create_form = StaffCreateForm()
+    doc_user_form = DoctorForm()
+    
 
-    return render(request, 'tracker/staffCreate.html')
+    if request.method == 'POST':
+        staff_create_form = StaffCreateForm(request.POST)
+        doc_user_form = DoctorForm(request.POST)
+        if User.objects.filter(username = request.POST['username']).exists():
+            messages.error(request, 'Username exists.')
+        else:
+            if staff_create_form.is_valid() and doc_user_form.is_valid():
+                #staff_create_form.save()
+                user = staff_create_form.save()
+                profile = doc_user_form.save(commit=False)
+                profile.user = user
+                profile.save()
+                doc_grp.user_set.add(user)
+                messages.success(request, 'Account Created!')
+        return redirect('/staffCreate/')
+    
+    data = {
+        'staff_create_form': staff_create_form,
+        'doc_user_form': doc_user_form,
+    }
+
+    return render(request, 'tracker/staffCreate.html', data)
