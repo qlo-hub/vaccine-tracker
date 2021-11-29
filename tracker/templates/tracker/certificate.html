@@ -17,13 +17,14 @@
               <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
               <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
               {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
-              <a class="btn btn-outline-primary">Portal</a>
+              <a class="btn btn-outline-primary" href="{% url 'portal' patient.id %}">Portal</a>
               {% endif %}
               <a class="btn btn-outline-primary" href="#">Certificate</a>
             </div>
         </div>
 
         <div class="col-lg-10" style="background-color: white; padding-top: 8%; padding-bottom: 8%;">
+            {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
 
             {% if patient.cert_date is None %}
             <h4>Date: No Vaccine Certificate Yet</h4>
@@ -52,6 +53,25 @@
                   View/Print
                 </a>
             </div>
+
+            {% else %}
+
+            <div class="certificate-text">
+                <p style="border-style: solid; padding: 1%; padding-bottom: 5%; padding-right: 20%; font-size: 18px; color: black; width: max-content ;">
+                    Click view button to view vaccine certificate. <br><br>
+                    NOTE: This is not an official document. Please consult with your physicican for a signed copy.  
+                </p>
+                <a style="display:inline;" 
+                  class="btn btn-primary" 
+                  href="{% url 'generatepdf' patient.id %}" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  >
+                  View/Print
+                </a>
+
+            {% endif %}
+            </div>    
         </div>
     </div>
     

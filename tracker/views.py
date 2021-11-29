@@ -362,15 +362,6 @@ def certificate(request, pk):
        
          return redirect('/certificate/' + pk)
 
-    # if(request.method == "POST"):
-    #     cert_date = request.POST.get['sign_cert']
-
-    # if cert_date:
-    #     if patient:
-    #         patient.cert_date = cert_date
-    #         patient.save()
-    #     return redirect('/certificate/' + pk)
-
     data = {
         'patient': patient, 
         'age': age,

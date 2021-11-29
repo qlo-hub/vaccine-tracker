@@ -11,7 +11,7 @@
             <a class="btn btn-outline-primary" href="#">Appointment</a>
             <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
             {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
-            <a class="btn btn-outline-primary">Portal</a>
+            <a class="btn btn-outline-primary" href="{% url 'portal' patient.id %}">Portal</a>
             {% endif %}
             <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
           </div>
