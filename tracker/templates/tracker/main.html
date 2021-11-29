@@ -1,4 +1,5 @@
 {% load static %}
+{% load customtags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,18 +87,27 @@
 <body>
   <nav class="navbar navbar-expand-xl" style="background-color: rgb(4, 4, 80);color: white;">
     <div class="container-fluid">
+      {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
         <a href="{% url 'home' %}" class="navbar-brand">
+      {% else %}    
+        <a href="{% url 'homePatient' %}" class="navbar-brand">
+      {% endif %}    
           <div class="logo-image">
             <img src="{% static 'images/logo.jpg' %}" class="img-fluid">
           </div> 
         </a>
+        {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
         <a href="{% url 'home' %}"><h2 style="float: left; color: #FAFAFA;">BaQna</h2></a>
+        {% else %}
+        <a href="{% url 'homePatient' %}"><h2 style="float: left; color: #FAFAFA;">BaQna</h2></a>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
       <div class="collapse navbar-collapse me-auto" id="navbarTogglerDemo02">
         <div style="margin-left: auto;margin-top: 10px;">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-custom">
+            {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
             <li class="nav-item" style="margin-left: 15rem;">
               <a class="nav-link" href="{% url 'home' %}"><h5><i class="fas fa-child"></i> Patient</h5></a>
             </li>
@@ -107,6 +117,7 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'notifs' %}"><h5><i class="fas fa-bell"></i> Notifications</h5></a>
             </li>
+            {% endif %}
             <li class="nav-item">
               <div class="dropdown">
                 <button class="btn btn-primary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -114,7 +125,9 @@
                   {{request.user}}
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
                   <li><a class="dropdown-item drops" href="http://127.0.0.1:8000/admin/" target="_blank" rel="noopener noreferrer"><i class="fas fa-users-cog"></i> Admin page</a></li>
+                  {% endif %}
                   <li><a class="dropdown-item drops" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
               </div>

@@ -1,7 +1,6 @@
 {% include 'tracker/info_header.html' %}
-
 {% block content %}
-
+{% load customtags %}
 <style>
 </style>
 
@@ -17,7 +16,9 @@
               <a class="btn btn-outline-primary" href="{% url 'patient' patient.id %}">Profile</a>
               <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
               <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
-              <a class="btn btn-outline-primary" href="{% url 'portal' patient.id%}">Portal</a>
+              {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
+              <a class="btn btn-outline-primary">Portal</a>
+              {% endif %}
               <a class="btn btn-outline-primary" href="#">Certificate</a>
             </div>
         </div>

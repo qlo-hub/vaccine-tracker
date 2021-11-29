@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.mail import send_mail
 from vaccine_tracker.settings import DATABASES, EMAIL_HOST_USER
-from .decorators import unauthenticated_user, allowed_users, admin_only
+from .decorators import *
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
@@ -29,6 +29,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.decorators import method_decorator
+
 
 
 
@@ -110,16 +111,20 @@ def loginPage(request):
                 user = authenticate(request, username=username, password=password)
                 
                 if user is not None:
-                    login(request, user)
-                    return redirect('home')
+                    if user.groups.filter(name='Patient User').exists():
+                        login(request, user)
+                        return redirect('homePatient')
+                    else:
+                        login(request, user)
+                        return redirect('home')
                 else:
                     messages.info(request, 'Username or password is incorrect. Please try again.')
         context = {}
         return render(request, 'tracker/login.html', context)
 
 
-
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def homePage(request):
     patients = Patient.objects.all()
     patientFilter = PatientFilter(request.GET, queryset=patients)
@@ -132,14 +137,30 @@ def homePage(request):
 
     return render(request, "tracker/home.html", data)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Patient User'])
+def homePagePatient(request):
+    patientUser = request.user.patientuser
+
+    # -- Age (X Years Y Months) --
+    curr_date = datetime.date.today()
+    months = curr_date.month - patientUser.patient.birthdate.month
+    years = curr_date.year - patientUser.patient.birthdate.year
+    age = "{} year {} month".format(years, months)
+    
+    data = {
+        'patientUser': patientUser, 'age': age,
+    }
+    return render(request, 'tracker/homePatient.html', data)
+
 #--CREATE RECORD VIEW--
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def createRecord(request):
     patient_form = CreateRecordFormPatient()
     latest = Patient.objects.latest('id')
     latest_id = getattr(latest, 'id')
 
-    
     
     if(request.method == "POST"):
         patient_form = CreateRecordFormPatient(request.POST)
@@ -174,6 +195,7 @@ def patient(request, pk):
     }
     return render(request, 'tracker/patient.html', data)
 
+
 @login_required(login_url='login')
 def editPatient(request, pk):
     patient = Patient.objects.get(id=pk)
@@ -205,6 +227,7 @@ def editPatient(request, pk):
 def appointment(request, pk):
     patient = Patient.objects.get(id=pk)
     appointment_form = AppointmentForm(initial={'patient': patient})
+    appointment_form_patient = AppointmentFormPatient(initial={'patient': patient, 'status': 'Requested', 'doctor': patient.attending_doctor})
 
     appointments = Appointment.objects.all()
 
@@ -226,6 +249,7 @@ def appointment(request, pk):
     data = {
         'patient': patient,
         'appointment_form': appointment_form,
+        'appointment_form_patient': appointment_form_patient,
         'appointments': appointments,
         'age': age,
     }
@@ -252,6 +276,7 @@ def appointment(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def editAppointment(request, pk):
     patient = Patient.objects.get(id=pk)
     appointments = Appointment.objects.all()
@@ -281,6 +306,7 @@ def editAppointment(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def portal(request, pk):
     patient = Patient.objects.get(id=pk)
     patient_user_grp = Group.objects.get(name='Patient User')
@@ -383,6 +409,7 @@ def vaccine(request, pk):
     return render(request, 'tracker/vaccine.html', data)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def editVaccine(request, pk):
     patient = Patient.objects.get(id=pk)
     vaccines = Vaccine.objects.all()
@@ -410,21 +437,51 @@ def editVaccine(request, pk):
     return render(request, 'tracker/editVaccine.html', data)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def report(request):
 
     return render(request, 'tracker/report.html')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def reminder(request):
 
     return render(request, 'tracker/reminder.html')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def staffUpdate(request):
+    doc_grp = Group.objects.get(name='Doctor')
 
     return render(request, 'tracker/staffUpdate.html')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admin', 'Doctor'])
 def staffCreate(request):
+    doc_grp = Group.objects.get(name='Doctor')
+    staff_create_form = StaffCreateForm()
+    doc_user_form = DoctorForm()
+    
 
-    return render(request, 'tracker/staffCreate.html')
+    if request.method == 'POST':
+        staff_create_form = StaffCreateForm(request.POST)
+        doc_user_form = DoctorForm(request.POST)
+        if User.objects.filter(username = request.POST['username']).exists():
+            messages.error(request, 'Username exists.')
+        else:
+            if staff_create_form.is_valid() and doc_user_form.is_valid():
+                #staff_create_form.save()
+                user = staff_create_form.save()
+                profile = doc_user_form.save(commit=False)
+                profile.user = user
+                profile.save()
+                doc_grp.user_set.add(user)
+                messages.success(request, 'Account Created!')
+        return redirect('/staffCreate/')
+    
+    data = {
+        'staff_create_form': staff_create_form,
+        'doc_user_form': doc_user_form,
+    }
+
+    return render(request, 'tracker/staffCreate.html', data)

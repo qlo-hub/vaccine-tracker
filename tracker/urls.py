@@ -29,4 +29,7 @@ urlpatterns = [
     path('staffUpdate/', views.staffUpdate, name='staffUpdate'),
     path('staffCreate/', views.staffCreate, name='staffCreate'),
 
+
+    path('homePatient/', views.homePagePatient, name = 'homePatient'),
+
 ]

@@ -1,5 +1,5 @@
 {% include 'tracker/info_header.html' %}
-
+{% load customtags %}
 {% block content %}
 <style>
 
@@ -12,7 +12,10 @@
           <a class="btn btn-outline-primary" href="#">Profile</a>
           <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
           <a class="btn btn-outline-primary">Vaccine</a>
+          {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
           <a class="btn btn-outline-primary">Portal</a>
+          {% else %}
+          {% endif %}
           <a class="btn btn-outline-primary">Certificate</a>
         </div>
       </div>
@@ -28,7 +31,13 @@
                     <td class="table-warning">Nickname</td>
                     <td>{{patient_form.nick_name}}</td>
                     <td class="table-warning" colspan="2">Attending Doctor</td>
+
+                    {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
                     <td colspan="2">{{patient_form.attending_doctor}}</td>
+                    {% else %}
+                    <td colspan="2">{{patient.attending_doctor}}</td>
+                    {% endif %}
+
                     <td class="table-warning">Record #</td>
                     <td class="table-warning" id="record_no" style="text-align: left;">{{patient.id}}</td>
                   </tr>
@@ -125,7 +134,6 @@
                 </tr>
                 </tbody>
               </table>
-        
             <button type="submit" class="btn btn-success">Save</button>
             <a class="btn btn-danger" href="{% url 'patient' patient.id %}">Cancel</a>
             <!-- <span class="fw-lighter" style="color: red;">*Required fields</span> -->

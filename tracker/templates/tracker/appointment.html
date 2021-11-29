@@ -1,6 +1,6 @@
 {% include 'tracker/info_header.html' %}
-
 {% block content %}
+{% load customtags %}
 <style>
 </style>
 <div class="container-fluid" style="padding:1%; ">
@@ -10,7 +10,9 @@
             <a class="btn btn-outline-primary" href="{% url 'patient' patient.id %}">Profile</a>
             <a class="btn btn-outline-primary" href="#">Appointment</a>
             <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
-            <a class="btn btn-outline-primary" href="{% url 'portal' patient.id %}">Portal</a>
+            {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
+            <a class="btn btn-outline-primary">Portal</a>
+            {% endif %}
             <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
           </div>
         </div>
@@ -47,9 +49,12 @@
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#schedule" style="margin-top: 2%;">
               Schedule Appointment
             </button>
+            
+            {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
             <a class="btn btn-primary" style="margin-top: 2%;" href="{% url 'editAppointment' patient.id %}">
               Edit Appointment
             </a>
+            {% endif %}
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'success' %}
@@ -80,15 +85,15 @@
                       <h5 class="modal-title" id="exampleModalLabel">Schedule an appointment</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    {% if request.user|has_group:"Patient User" %}
+                    <div class="modal-body">
+                      {{appointment_form_patient }}
+                    </div>
+                    {% else %}
                     <div class="modal-body">
                       {{appointment_form}}
-                        <!-- {{appointment_form.status}}
-                        {{appointment_form.date}}
-                        {{appointment_form.time}}
-                        {{appointment_form.doctor}}
-                        {{appointment_form.visit}}
-                        {{appointment_form.location}} -->
                     </div>
+                    {% endif %}
                     <div class="modal-footer">
                       <button type="submit" class="btn btn-success">Schedule</button>
                       <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>

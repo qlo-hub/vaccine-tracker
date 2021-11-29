@@ -5,6 +5,13 @@ from django.forms.widgets import *
 from django_filters import DateFilter
 from django_filters.filters import CharFilter, DateFromToRangeFilter, NumberFilter
 from .models import *
+from django import template
+from django.contrib.auth.models import User, Group
+
+register = template.Library()
+@register.filter(name='has_group') 
+def has_group(user, group_name):
+    return user.groups.filter(name=group_name).exists() 
 
 
 class PatientFilter(django_filters.FilterSet):

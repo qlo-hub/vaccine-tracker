@@ -2,6 +2,16 @@
 {% block content %}
 
 <style>
+  .form-control{
+    margin-bottom: 10px;
+  }
+  .portal-fields .btn{
+    margin-bottom: 10px;
+  }
+
+  .can-reg-label{
+    margin-bottom: 5px;
+  }
 </style>
 
 <div class="container-fluid" style="padding:1%; ">
@@ -22,10 +32,61 @@
             </div>
         </div>
 
-        <div class="col-lg-10" style="background-color: white; padding-top: 8%; padding-bottom: 8%;">
+        <div class="col-lg-10" style="background-color: white; padding-top: 2%; padding-bottom: 2%;">
           <div class = "staffCreate-fields">
-            
+            <div class="col-lg-6" style="margin-left: 10%;">
+              
+              <!-- Success/Error Message Popup -->
+              {% if messages %}
+              {% for message in messages %}
+                {% if message.tags == 'success' %}
+                  <div class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="message">
+                      &nbsp;{{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>
+                {% elif message.tags == 'error' %}
+                  <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+                    <i class="fas fa-times-circle"></i>
+                    <div class="message">
+                      &nbsp;{{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>  
+                {% endif %}
+                {% endfor %}  
+                {% endif %}
+              
+              <!-- Form -->
+              <form action="" method="post">
+                {% csrf_token %}
+                <div class="col-sm-8">
+                  {{doc_user_form.prefix}}
+                  {{doc_user_form.first_name}}
+                  {{doc_user_form.last_name}}
+                  {{doc_user_form.title}}
+                  
+                  {{staff_create_form.username}}
+                  {{staff_create_form.password1}}
+                  {{staff_create_form.password2}}
+                  {{staff_create_form.email}}
+
+                  {{doc_user_form.date_start}}
+                  {{doc_user_form.date_end}}
+                  {{doc_user_form.cell_no}}
+                  {{doc_user_form.doc_type}}
+                  <label class="can-reg-label">Can Register?</label>
+                  {{doc_user_form.can_reg}}
+                </div>
+                <button type="submit" class="btn btn-success">Create</button>
+              </form>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+</div>
 
 {% endblock content %}
