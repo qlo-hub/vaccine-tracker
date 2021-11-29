@@ -11,24 +11,19 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 class Physician(models.Model):
-    CAN_REG = (
-        ('Yes', 'Yes'),
-        ('No', 'No'),
-    )
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    prefix = models.CharField(max_length=100, null=True, blank=True)
+    # user = models.OneToOneField(User, limit_choices_to={'groups__name':u'Physician'}, null=True, on_delete=models.CASCADE)
     last_name = models.CharField(max_length=100, null=True)
     first_name = models.CharField(max_length=100, null=True)
-    title = models.CharField(max_length=100, null=True, blank=True)
-    date_start = models.DateField(null=True, blank=True)
-    date_end = models.DateField(null=True, blank=True)
+    age = models.IntegerField(null=True)
     cell_no = PhoneNumberField(null=True, blank=True)
-    doc_type = models.CharField(max_length=100, null=True)
-    can_reg = models.CharField(max_length=100, null=True, blank=True, choices=CAN_REG)
-
+    specialization = models.CharField(max_length=100, null=True)
+    email = models.EmailField(max_length=100, null=True)
 
     def __str__(self):
-        return self.last_name + ", " + self.first_name + ' - ' + self.doc_type
+        return self.last_name + ", " + self.first_name + ' - ' + self.specialization
+    
+    def get_absolute_url(self):
+        return reverse('updatePhysician', args=[str(self.pk)])
 
 
 class Patient(models.Model):

@@ -119,128 +119,53 @@
 <script>
   // --Age format--
   function format(){
-    //collect input from HTML form and convert into date format
-    var userinput = document.getElementById("dob").value;
-    var dob = new Date(userinput);
-    
-    //extract the year, month, and date from user date input
-    var dobYear = dob.getYear();
-    var dobMonth = dob.getMonth();
-    var dobDate = dob.getDate();
-    
-    //get the current date from the system
-    var now = new Date();
-    //extract the year, month, and date from current date
-    var currentYear = now.getYear();
-    var currentMonth = now.getMonth();
-    var currentDate = now.getDate();
-	
-    //declare a variable to collect the age in year, month, and days
-    var age = {};
-    var ageString = "";
-  
-    //get years
-    yearAge = currentYear - dobYear;
-	
-    //get months
-    if (currentMonth >= dobMonth)
-      //get months when current month is greater
-      var monthAge = currentMonth - dobMonth;
-    else {
-      yearAge--;
-      var monthAge = 12 + currentMonth - dobMonth;
+    var dob = document.getElementById('dob').value;
+
+    var month = new Date(dob).getMonth();
+    var year = new Date(dob).getFullYear();
+    var day = new Date(dob).getDate();
+
+    var curr = new Date();
+    var currd = curr.getDate();
+    var currm = curr.getMonth();
+    var curry = curr.getFullYear();
+
+    // --Years--
+    var y = curry - year;
+
+    // --Months-- 
+    if(month <= currm){
+     var m = currm - month;
+    } else{
+      y--;
+     var m = 12 + currm - month;
     }
-
-    //get weeks
-    var time_difference = now.getTime() - dob.getTime();  
-    var days_difference = time_difference / (1000 * 60 * 60 * 24);
-
-    //get days
-    if (currentDate >= dobDate)
-      //get days when the current date is greater
-      var dateAge = currentDate - dobDate;
-    else {
-      monthAge--;
-      var dateAge = 31 + currentDate - dobDate;
-
-      if (monthAge < 0) {
-        monthAge = 11;
-        yearAge--;
+    // --Days--
+    if(day <= currm){
+     var d = currd - day;
+    } else{
+      m--;
+     var d = 31 + currd - day;
+      if(m < 0){
+        m = 11;
+        y--;
       }
     }
-    //group the age in a single variable
-    age = {
-    years: yearAge,
-    months: monthAge,
-    months1: Math.floor(days_difference/30.5),
-    weeks: Math.floor(days_difference/7),
-    days: dateAge
-    };
     
 
-    if(!isNaN(yearAge) && !isNaN(monthAge)){  
-      if ( (age.years > 0) && (age.months > 0) && (age.days > 0) ){
-        if(age.months1 <= 18){
-          ageString = age.months1 + " month/s"
-        }
-        else if(age.years >= 18){
-          ageString = age.years + " year/s"
-        }
-        else
-          ageString = age.years + " year/s " + age.months + " month/s";
-      }
-
-      // same date, 1 y.o. <
-      else if ( (age.years > 0) && (age.months > 0) && (age.days == 0) )
-        ageString = age.years + " year/s " + age.months + " month/s";
-        
-      // 8 wks
-      else if ( (age.years == 0) && (age.months == 0) && (age.days > 0) ){
-        if(age.days < 7)
-          ageString = age.days + " day/s"
-        else
-          ageString = age.weeks + " week/s";
-      }
-      
-      // same month
-      else if ( (age.years > 0) && (age.months == 0) && (age.days > 0)){
-        if(age.months1 <= 18){
-          ageString = age.months1 + " month/s"
-        }
-        else if(age.years >= 18){
-          ageString = age.years + " year/s"
-        }
-        else
-          ageString = age.years + " year/s " + age.months + " month/s";
-      }
-      
-      // birthday
-      else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )  
-        ageString = age.years +  " year/s. Birthday today"; 
-
-      // before 1 y.o
-      else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) ){
-        if(age.weeks <= 8){
-          ageString = age.weeks + " week/s"
-        }
-        else
-          ageString = age.months + " month/s"
-      }
-      
-      // years and days
-      else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )
-        ageString = age.years + " year/s";
-      
-      // before 1 y.o., same date, diff month
-      else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )
-        ageString = age.months + " month/s";
-
+    if(!isNaN(m) && !isNaN(y)){
+      // if(y == 0){
+      //   if(m == 0){
+      //     var w = d / 7;
+      //     d %= 7;
+      //     document.getElementById('age').innerHTML = w + "weeks" + d + "days";
+      //   }
+      // }
+      document.getElementById('age').innerHTML = y + " year " + m + " month ";
     }
-    else ageString = " "; 
-
-    //display the calculated age
-    return document.getElementById("age").innerHTML = ageString ; 
-             
+    else{
+      document.getElementById('age').innerHTML = " ";
+    }
   }
 
   // --Record Number--
