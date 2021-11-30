@@ -1,5 +1,6 @@
 {% include 'tracker/info_header.html' %}
 {% block content %}
+{% load auth_extras %}
 <style>
 
 </style>
@@ -8,10 +9,12 @@
   <div class="row">
       <div class="col-lg-2" style="background-color: rgb(255, 255, 255); display: flex; justify-content: center; margin-top: 5%;">
         <div class="btn-group-vertical" style="display: block;">
-          <a class="btn btn-outline-primary" href="#">Profile</a>
+          <a class="btn btn-outline-primary active" href="#">Profile</a>
           <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
           <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
+          {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
           <a class="btn btn-outline-primary" href="{% url 'portal' patient.id %}">Portal</a>
+          {% endif %}
           <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
         </div>
       </div>

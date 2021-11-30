@@ -26,9 +26,9 @@ class Physician(models.Model):
     doc_type = models.CharField(max_length=100, null=True)
     can_reg = models.CharField(max_length=100, null=True, blank=True, choices=CAN_REG)
 
-
     def __str__(self):
-        return self.last_name + ", " + self.first_name + ' - ' + self.doc_type
+        return self.doc_type + " " + self.last_name
+
 
 
 class Patient(models.Model):
@@ -100,7 +100,7 @@ class Appointment(models.Model):
         ('Rescheduled', 'Rescheduled'),
         ('Requested', 'Requested'),
     )
-    patient = models.ForeignKey(Patient, null=True, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, null=True, blank=True, on_delete=models.CASCADE)
     status = models.CharField(max_length=100, choices=STATUS, null=True)
     date = models.DateField(null=True)
     time = models.TimeField(null=True)
@@ -130,7 +130,6 @@ class Vaccine(models.Model):
 class PatientVaccine(models.Model):
     patient = models.ForeignKey(Patient, null=True, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, null=True, on_delete=models.CASCADE)
-    
 
     def __str__(self):
         return "{} for {}".format(self.vaccine, self.patient)

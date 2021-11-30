@@ -33,20 +33,29 @@
                                 <td><b>Remarks</b></td>
                             </tr>
                         </thead>
+                        {% csrf_token %}
+                        {{formset.management_form}}
+                        {% for formset in formsets %}
+                            {% for form in formset.forms %}
+                                {% for vaccine in vaccines %}
                         <tbody>
-                            {% csrf_token %}
-                            {% for vaccine in vaccines %}
-                                <tr>
-                                    <td>{{vaccine.age}}</td>
-                                    <td>{{vaccine.name}}</td>
-                                    <td>{{vaccine.dose}}</td>
-                                    <td>{{vaccine_form.brand}}</td>
-                                    <td>{{vaccine_form.date}}</td>
-                                    <td>{{vaccine_form.location}}</td>
-                                    <td>{{vaccine_form.remarks}}</td>
-                                </tr>
+                            <td>{{vaccine.age}}</td>
+                            <td>{{vaccine.name}}</td>
+                            <td>{{vaccine.dose}}</td>
+                            {% for field in form.visible_fields %}
+                            <td>
+                                {% if forloop.first %}
+                                    {% for hidden in form.hidden_fields %}
+                                        {{hidden}}
+                                    {% endfor %}
+                                {% endif %}
+                                {{field}}
+                            </td>
                             {% endfor %}
                         </tbody>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
                     </table>
                     <button type="submit" class="btn btn-success" style="margin-top: 12px;">Save</button>
                     <a class="btn btn-danger" href="{% url 'vaccine' patient.id %}">Cancel</a> 

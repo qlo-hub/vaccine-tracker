@@ -127,7 +127,7 @@ class AppointmentForm(ModelForm):
             attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm/dd/yyyy'},
             format='%m/%d/%Y',
         ),
-        input_formats=['%m/%d/%Y']
+        input_formats=['%m/%d/%Y', '%m-%d-%Y']
     )
     class Meta:
         model = Appointment
@@ -141,13 +141,25 @@ class AppointmentForm(ModelForm):
             'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
         }
 
-class EditAppointmentForm(ModelForm):
+class AppointmentFormPatient(ModelForm):
+    date = forms.DateField(
+        widget=DateInput(
+            attrs={'class': 'form-control', 'id': 'date', 'placeholder': 'mm/dd/yyyy'},
+            format='%m/%d/%Y',
+        ),
+        input_formats=['%m/%d/%Y']
+    )
     class Meta:
         model = Appointment
-        fields = ('status',)
-        # widgets = {
-        #     'patient': HiddenInput(attrs={'type': 'hidden'}),
-        # }
+        fields = '__all__'
+        widgets = {
+            'patient': HiddenInput(attrs={'type': 'hidden'}),
+            'status': HiddenInput(attrs={'type': 'hidden'}),
+            'time': forms.NumberInput(attrs={'type': 'time', 'class': 'form-control', 'placeholder': 'Time', 'format': '%I:%M %p'}),
+            'doctor': HiddenInput(attrs={'type': 'hidden'}),
+            'visit': TextInput(attrs={'class': 'form-control', 'placeholder': 'Visit'}),
+            'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
+        }
 
 class PortalForm(UserCreationForm):
     password1 = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True,}))
@@ -169,19 +181,27 @@ class PatientUserForm(ModelForm):
         }
 
 class PatientVaccineForm(ModelForm):
+    class Meta:
+        model = PatientVaccine
+        fields = '__all__'
+        widgets = {
+            'patient': HiddenInput(attrs={'type': 'hidden'}),
+            'vaccine': Select(attrs={'class': 'form-control', 'placeholder': 'Relationship'})
+        }
+
+class VaccineForm(ModelForm):
     LOCATION = (
     ('R thigh', 'R thigh'), ('L thigh', 'L thigh'), ('R arm ', 'R arm'),
     ('L arm', 'L arm'), ('R buttocks', 'R buttocks'), ('L buttocks', 'L buttocks'),
     )
-    location = forms.ChoiceField(choices=LOCATION)
+    location = forms.ChoiceField(choices=LOCATION, widget=Select(attrs={'class': 'form-control', 'placeholder': 'Location'}))
     class Meta:
         model = Vaccine
         fields = ('brand', 'date', 'location', 'remarks')
         widgets = {
-        #     'brand': TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}),
-             'date': TextInput(attrs={'placeholder': 'MM/DD/YYYY'})
-        #     'location': TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
-        #     'remarks': TextInput(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
+            'brand': TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}),
+            'date': TextInput(attrs={'class': 'form-control', 'placeholder': 'MM/DD/YYYY'}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
         }
 
 class StaffCreateForm(UserCreationForm):
@@ -205,6 +225,7 @@ class DoctorForm(ModelForm):
             attrs={'class': 'form-control', 'id': 'date-start', 'placeholder': 'Date Start (MM/DD/YYYY)'},
             format='%m/%d/%Y',
         ),
+        required=False,
         input_formats=['%m/%d/%Y']
     )
     date_end = forms.DateField(
@@ -212,6 +233,7 @@ class DoctorForm(ModelForm):
             attrs={'class': 'form-control', 'id': 'date-end', 'placeholder': 'Date End (MM/DD/YYYY)'},
             format='%m/%d/%Y',
         ),
+        required=False,
         input_formats=['%m/%d/%Y']
     )
     cell_no = PhoneNumberField(

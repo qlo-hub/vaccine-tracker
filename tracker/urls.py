@@ -7,7 +7,6 @@ urlpatterns = [
     
     path('home/', views.homePage, name = 'home'),
     path('', views.loginPage, name = 'login'),
-    path('register/', views.registerPage, name = 'register'),
     path('password_reset', views.password_reset, name='password_reset'),
     path('logout/', views.logoutUser, name = 'logout'),
 
@@ -29,4 +28,5 @@ urlpatterns = [
     path('staffUpdate/', views.staffUpdate, name='staffUpdate'),
     path('staffCreate/', views.staffCreate, name='staffCreate'),
 
+    path('homePatient/', views.homePagePatient, name = 'homePatient'),
 ]

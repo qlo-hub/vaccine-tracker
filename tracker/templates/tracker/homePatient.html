@@ -1,0 +1,33 @@
+{% include 'tracker/info_header_patient.html' %}
+{% block content %}
+<style>
+
+</style>
+
+<div class="container-fluid" style="padding:1%;">
+  <div class="row">
+      <div class="col-lg-2" style="background-color: rgb(255, 255, 255); display: flex; justify-content: center; margin-top: 5%;">
+        <div class="btn-group-vertical" style="display: block;">
+          <a class="btn btn-outline-primary" href="{% url 'patient' patientUser.patient.id %}">Profile</a>
+          <a class="btn btn-outline-primary" href="{% url 'appointment' patientUser.patient.id %}">Appointment</a>
+          <a class="btn btn-outline-primary" href="{% url 'vaccine' patientUser.patient.id %}">Vaccine</a>
+          <a class="btn btn-outline-primary" href="{% url 'certificate' patientUser.patient.id %}">Certificate</a>
+        </div>
+      </div>
+
+      <div class="col-lg-10" style="background-color: rgb(255, 255, 255)">
+        <div class="reminder-div" style="margin-top: 5%;">
+          <h4>
+            Hi. This is from __ of __ reminding you of your child's vaccination schedule this __ at __. Your 
+            child is due for __. Please reply CONFIRM to finalize your booking appointment. If you need to reschedule,
+            message __. 
+          </h4>
+
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}

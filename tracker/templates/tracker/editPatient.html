@@ -1,6 +1,6 @@
 {% include 'tracker/info_header.html' %}
-
 {% block content %}
+{% load auth_extras %}
 <style>
 
 </style>
@@ -12,7 +12,9 @@
           <a class="btn btn-outline-primary" href="#">Profile</a>
           <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
           <a class="btn btn-outline-primary">Vaccine</a>
+          {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
           <a class="btn btn-outline-primary">Portal</a>
+          {% endif %}
           <a class="btn btn-outline-primary">Certificate</a>
         </div>
       </div>
@@ -28,7 +30,13 @@
                     <td class="table-warning">Nickname</td>
                     <td>{{patient_form.nick_name}}</td>
                     <td class="table-warning" colspan="2">Attending Doctor</td>
+
+                    {% if request.user|has_group:"Doctor" or request.user|has_group:"Admin" %}
                     <td colspan="2">{{patient_form.attending_doctor}}</td>
+                    {% else %}
+                    <td colspan="2">{{patient.attending_doctor}}</td>
+                    {% endif %}
+
                     <td class="table-warning">Record #</td>
                     <td class="table-warning" id="record_no" style="text-align: left;">{{patient.id}}</td>
                   </tr>

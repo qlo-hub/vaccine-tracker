@@ -21,7 +21,6 @@
               {% csrf_token %}
               <table class="table-bordered align-middle table-sm" style="width: 100%;">
                 <thead class="thead-warning" style="background-color: rgb(214, 214, 214);">
-                  
                   <tr>
                     <td>Status</td>
                     <td>Date</td>
@@ -31,19 +30,22 @@
                     <td>Loc</td>
                   </tr>
                 </thead>
-                {% for appointment in appointments %}
-                  {% if appointment.patient == patient  %}
+                {{formset.management_form}}
+                {% for form in formset.forms %}
                 <tbody>
                   <tr>
-                    <td>{{edit_appointment_form.status}}</td>
-                    <td>{{appointment.date|date:"m/d/Y"}}</td>
-                    <td>{{appointment.time}}</td>
-                    <td>{{appointment.doctor}}</td>
-                    <td>{{appointment.visit}}</td>
-                    <td>{{appointment.location}}</td>
+                    {% for field in form.visible_fields %}
+                    <td>
+                      {% if forloop.first %}
+                        {% for hidden in form.hidden_fields %}
+                          {{hidden}}
+                        {% endfor %}
+                      {% endif %}
+                      {{field}}
+                    </td>
+                  {% endfor %}
                   </tr>
                 </tbody>
-                  {% endif %}
                 {% endfor %}
               </table>
               <button type="submit" class="btn btn-success" style="margin-top: 12px;">Save</button>
@@ -52,6 +54,27 @@
               </a>
             </form>
           </div>
+          {% if messages %}
+              {% for message in messages %}
+                {% if message.tags == 'success' %}
+                  <div class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="message">
+                      &nbsp;{{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>
+                {% elif message.tags == 'error' %}
+                  <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+                    <i class="fas fa-times-circle"></i>
+                    <div class="message">
+                      &nbsp;{{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>  
+                {% endif %}
+              {% endfor %}  
+            {% endif %}
         </div>
     </div>
 </div>
