@@ -1,0 +1,183 @@
+[1mdiff --cc db.sqlite3[m
+[1mindex 732df84,8c6b280..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/__init__.cpython-39.pyc[m
+[1mindex c2a46f7,ac9fb95..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/admin.cpython-39.pyc[m
+[1mindex 6d175dc,bf3e25c..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/decorators.cpython-39.pyc[m
+[1mindex e6792a4,1a36342..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/filters.cpython-39.pyc[m
+[1mindex 0abc272,f615f5f..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/forms.cpython-39.pyc[m
+[1mindex 2b9275e,60209f2..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/models.cpython-39.pyc[m
+[1mindex 39d6fa7,128b2a7..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/urls.cpython-39.pyc[m
+[1mindex c594a31,7a7d89f..0000000[m
+Binary files differ
+[1mdiff --cc tracker/__pycache__/views.cpython-39.pyc[m
+[1mindex 27b6153,43af7ae..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0001_initial.cpython-39.pyc[m
+[1mindex 33667d9,cc98bb9..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0002_physician_user.cpython-39.pyc[m
+[1mindex ee9a4f6,5ba6ead..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0003_alter_physician_user.cpython-39.pyc[m
+[1mindex 4923da9,7f54064..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0004_auto_20211011_0238.cpython-39.pyc[m
+[1mindex 4798221,974bb04..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0005_auto_20211012_2046.cpython-39.pyc[m
+[1mindex 4cafaed,cb5fdce..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0006_auto_20211012_2136.cpython-39.pyc[m
+[1mindex 8a9eb46,166539f..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0007_auto_20211012_2144.cpython-39.pyc[m
+[1mindex 6ce7578,7107fbb..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0008_auto_20211012_2147.cpython-39.pyc[m
+[1mindex 5fc5ac6,8088be9..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0009_auto_20211016_2121.cpython-39.pyc[m
+[1mindex 3b24148,bdf4e71..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0010_auto_20211018_1801.cpython-39.pyc[m
+[1mindex 00686fb,d404448..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0011_auto_20211018_1841.cpython-39.pyc[m
+[1mindex 6763f99,b4d633c..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0012_auto_20211018_1911.cpython-39.pyc[m
+[1mindex d0fd7c0,6e4b2e8..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0013_auto_20211018_2016.cpython-39.pyc[m
+[1mindex 46db212,c67a7cd..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0014_auto_20211018_2032.cpython-39.pyc[m
+[1mindex ad9ff4a,ce0dc67..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0015_auto_20211018_2045.cpython-39.pyc[m
+[1mindex 050f170,7978c1e..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0016_auto_20211018_2333.cpython-39.pyc[m
+[1mindex c2e732f,d7f98be..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0017_patient_suffix.cpython-39.pyc[m
+[1mindex 815eefd,5d02e29..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0018_auto_20211019_0602.cpython-39.pyc[m
+[1mindex aef792a,b46e0ee..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0019_auto_20211019_1848.cpython-39.pyc[m
+[1mindex b20b5f5,59f8c7e..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0020_auto_20211027_0850.cpython-39.pyc[m
+[1mindex c94851a,838f8c2..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0021_auto_20211027_0855.cpython-39.pyc[m
+[1mindex 4d52ca1,eb6c5aa..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0022_auto_20211027_0903.cpython-39.pyc[m
+[1mindex e7739d1,fa63d76..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0023_remove_patient_age.cpython-39.pyc[m
+[1mindex 132630b,1dc3667..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0024_appointment.cpython-39.pyc[m
+[1mindex 106671b,73a8a97..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0025_appointment_user.cpython-39.pyc[m
+[1mindex 66fe1d7,ae0d15c..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0026_auto_20211028_0323.cpython-39.pyc[m
+[1mindex 0630c61,98b9b18..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0027_alter_appointment_status.cpython-39.pyc[m
+[1mindex 99e729f,72df468..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0028_auto_20211101_1143.cpython-39.pyc[m
+[1mindex 24603ac,11a832f..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0029_patient_password.cpython-39.pyc[m
+[1mindex b236973,d093ca0..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0030_auto_20211101_1529.cpython-39.pyc[m
+[1mindex baaf25f,9db2cfb..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0031_patient_username.cpython-39.pyc[m
+[1mindex 623ca05,56e9b3d..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0032_patient_cert_date.cpython-39.pyc[m
+[1mindex a37c8bf,39539f7..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0033_patient_age.cpython-39.pyc[m
+[1mindex 61c6815,4bf23da..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0034_auto_20211107_0323.cpython-39.pyc[m
+[1mindex a038666,d6bff8e..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0035_auto_20211107_0357.cpython-39.pyc[m
+[1mindex c2bd65c,5997b58..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0036_patientuser.cpython-39.pyc[m
+[1mindex 760b2ed,f70ecfd..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0037_auto_20211107_0618.cpython-39.pyc[m
+[1mindex b729713,333c680..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0038_auto_20211107_0625.cpython-39.pyc[m
+[1mindex 1844e5b,ccb95da..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0039_vaccine.cpython-39.pyc[m
+[1mindex 1734e1f,45b2534..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0040_auto_20211116_1925.cpython-39.pyc[m
+[1mindex af8cb8b,346324e..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0041_auto_20211116_1930.cpython-39.pyc[m
+[1mindex 210601a,62478d9..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0042_vaccine_patient.cpython-39.pyc[m
+[1mindex ef84917,44f9515..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0043_remove_vaccine_patient.cpython-39.pyc[m
+[1mindex 62cd6a2,91984ae..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0044_auto_20211119_2318.cpython-39.pyc[m
+[1mindex e7cb6f2,fc6d5f1..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0045_physician_user.cpython-39.pyc[m
+[1mindex 90a604c,b5f9e32..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0046_physician_can_reg.cpython-39.pyc[m
+[1mindex b166458,e47d891..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/0047_alter_physician_can_reg.cpython-39.pyc[m
+[1mindex fab742b,e1c761a..0000000[m
+Binary files differ
+[1mdiff --cc tracker/migrations/__pycache__/__init__.cpython-39.pyc[m
+[1mindex 5b92c28,d41c784..0000000[m
+Binary files differ
+[1mdiff --cc vaccine_tracker/__pycache__/__init__.cpython-39.pyc[m
+[1mindex 6364c0a,d8148ac..0000000[m
+Binary files differ
+[1mdiff --cc vaccine_tracker/__pycache__/settings.cpython-39.pyc[m
+[1mindex fc57b41,4d70a47..0000000[m
+Binary files differ
+[1mdiff --cc vaccine_tracker/__pycache__/urls.cpython-39.pyc[m
+[1mindex 0758d3c,2f8482e..0000000[m
+Binary files differ
+[1mdiff --cc vaccine_tracker/__pycache__/wsgi.cpython-39.pyc[m
+[1mindex 941deaf,0934efa..0000000[m
+Binary files differ
