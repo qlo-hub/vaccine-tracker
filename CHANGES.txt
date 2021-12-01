@@ -1,0 +1,6 @@
+-Staff Update Details and Change Password
+-Portal Update Patient acct and change password
+-Different Certificate PDF Format for Patient and Doctor
+-Restriction pag "yes" ung can register na doctor kita nya staff button, pag "no" di niya kita staff button
+-Restriction pag own acct ni doctor stina-staff update, di kita ung can register field
+-Restriction na ung nassearch lang na patient ng logged in doctor is ung sakanya lang

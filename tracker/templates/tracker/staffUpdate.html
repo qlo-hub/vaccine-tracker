@@ -2,11 +2,14 @@
 {% block content %}
 
 <style>
+  .form-control{
+    margin-bottom: 10px;
+  }
 </style>
 
 <div class="container-fluid" style="padding:1%; ">
     <div class="row">
-        <div class="col-lg-2" style="background-color: rgb(255, 255, 255);display: flex; justify-content: center; align-items: center; padding-top: 8%; padding-bottom: 8%;">
+          <div class="col-lg-2" style="background-color: rgb(255, 255, 255);display: flex; justify-content: center; align-items: center; padding-top: 8%; padding-bottom: 8%;">
             <div class="btn-group-vertical" style="display: block;">
               <a class="btn btn-outline-primary" href="{% url 'report' %}">Report</a>
               <a class="btn btn-outline-primary" href="{% url 'reminder' %}">Reminder</a>
@@ -20,6 +23,80 @@
                 </ul>
               </div>
             </div>
+          </div>
+          
+          <div class="col-lg-4" style="background-color: white; padding-top: 8%;">
+
+            <!-- Success/Error Message Popup -->
+            {% if messages %}
+            {% for message in messages %}
+              {% if message.tags == 'success' %}
+                <div class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                  <i class="fas fa-check-circle"></i>
+                  <div class="message">
+                    &nbsp;{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                </div>
+              {% elif message.tags == 'error' %}
+                <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+                  <i class="fas fa-times-circle"></i>
+                  <div class="message">
+                    &nbsp;{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                </div>  
+              {% endif %}
+              {% endfor %}  
+              {% endif %}
+
+            <form method="get">
+              <div class="row">
+                <div class="col-sm-8">
+                  {{physicianFilter.form.first_name}}
+                  {{physicianFilter.form.last_name}}                   
+                  {{physicianFilter.form.title}}
+                  {{physicianFilter.form.user}}
+                  <button type="submit" style="width: 100%;" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                  <p class="fw-lighter" style="color: red;">*Do not input to get all the records.</p>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-lg-6" style="background-color: white; padding-top: 8%;">
+            {% if physicianFilter.form.data %}
+            <table id="rows" class="table table-primary table-bordered table-hover border-dark">
+              <thead>
+                <th>Title</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+              </thead>
+              {% for physician in physicians %}
+              <tbody>
+                <tr onclick="window.location='{% url 'staffUpdateEdit' physician.id %}'">
+                  <td>{{physician.title}}</td>
+                  <td>{{physician.first_name}}</td>
+                  <td>{{physician.last_name}}</td>
+                  <td>{{physician.user}}</td>
+                </tr>
+              </tbody>
+              {% empty %}
+              <tr><td colspan="6" style="color: red;"><h6>No records found.</h6></td></tr>
+              {% endfor %}
+            </table>
+            <a href="{% url 'staffUpdate' %}">
+              <button class="btn btn-danger"><i class="fas fa-search-minus"></i> Clear search</button>
+            </a>
+            {% endif %}  
+          </div>
+
         </div>
+    </div>
+</div>
+
+
+    
 
 {% endblock content %}

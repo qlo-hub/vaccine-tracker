@@ -142,8 +142,8 @@
       </div>
 
 <script>
-  // --Age format--
-  function format(){
+   // --Age format--
+   function format(){
     //collect input from HTML form and convert into date format
     var userinput = document.getElementById("dob").value;
     var dob = new Date(userinput);
@@ -241,11 +241,15 @@
       
       // birthday
       else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )  
-        ageString = age.years +  " year/s old. Birthday today"; 
+        ageString = age.years +  " year/s. Birthday today"; 
 
       // before 1 y.o
       else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) ){
-        ageString = age.months + " month/s"
+        if(age.weeks <= 8){
+          ageString = age.weeks + " week/s"
+        }
+        else
+          ageString = age.months + " month/s"
       }
       
       // years and days

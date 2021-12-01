@@ -31,6 +31,8 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.decorators import method_decorator
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 
@@ -266,13 +268,26 @@ def editAppointment(request, pk):
 
     return render(request, 'tracker/editAppointment.html', data)
 
+def hasPatientUser(request, pk):
+    patient = Patient.objects.get(id=pk)
+    if PatientUser.objects.get(patient=patient) is None:
+        return False
+    
+    return True
+
 
 @login_required(login_url='login')
 def portal(request, pk):
     patient = Patient.objects.get(id=pk)
+    try:
+        patient_user = PatientUser.objects.get(patient=patient)
+    except PatientUser.DoesNotExist:
+        patient_user = None
     patient_user_grp = Group.objects.get(name='Patient User')
+
     portal_form = PortalForm()
     patient_form = PatientUserForm()
+    portal_form_edit = PortalFormEdit()
     
     # -- Age (X Years Y Months) --
     curr_date = datetime.date.today()
@@ -296,18 +311,98 @@ def portal(request, pk):
                 messages.success(request, 'Account Created!')
         return redirect('/portal/' + pk)
     data = {
-        'patient': patient, 
+        'patient': patient,
+        'patient_user': patient_user, 
         'age': age,
         'portal_form': portal_form,
         'patient_form': patient_form,
+        'portal_form_edit': portal_form_edit,
     }
     return render(request, 'tracker/portal.html', data)
+
+@login_required(login_url='login')
+def portalEdit(request, pk):
+    patient = Patient.objects.get(id=pk)
+
+    try:
+        patient_user = PatientUser.objects.get(patient=patient)
+    except PatientUser.DoesNotExist:
+        patient_user = None
+
+    patient_form = PatientUserForm(instance=patient_user)
+    portal_form_edit = PortalFormEdit(instance=patient_user.user)
+
+    # -- Age (X Years Y Months) --
+    curr_date = datetime.date.today()
+    months = curr_date.month - patient.birthdate.month
+    years = curr_date.year - patient.birthdate.year
+    age = "{} year {} month".format(years, months)
+
+    if(request.method == "POST"):
+        patient_form = PatientUserForm(request.POST, instance=patient_user)
+        portal_form_edit = PortalFormEdit(request.POST, instance=patient_user.user)
+
+        if patient_form.is_valid() and portal_form_edit.is_valid():
+            patient_form.save()
+            portal_form_edit.save()
+            messages.success(request, 'Patient Account details have been saved.')
+        else:
+            messages.error(request, patient_form.errors)
+
+        return redirect('/portal/' + pk)
+    
+    data = {
+        'patient': patient,
+        'patient_user': patient_user,
+        'patient_form': patient_form,
+        'portal_form_edit': portal_form_edit,
+        'age': age,
+    }
+
+    return render(request, 'tracker/portalEdit.html', data)
+
+@login_required(login_url='login')
+def portalEditPass(request, pk):
+    patient = Patient.objects.get(id=pk)
+
+    try:
+        patient_user = PatientUser.objects.get(patient=patient)
+    except PatientUser.DoesNotExist:
+        patient_user = None
+
+    password_form = PasswordChangeForm(patient_user.user)
+
+    # -- Age (X Years Y Months) --
+    curr_date = datetime.date.today()
+    months = curr_date.month - patient.birthdate.month
+    years = curr_date.year - patient.birthdate.year
+    age = "{} year {} month".format(years, months)
+
+    if(request.method == "POST"):
+        password_form = PasswordChangeForm(patient_user.user, request.POST)
+
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Password Changed!')
+        else:
+            messages.error(request, password_form.errors)
+        
+        return redirect('/portal/' + pk)
+
+    data = {
+        'patient': patient,
+        'patient_user': patient_user,
+        'password_form': password_form,
+        'age': age,
+    }
+
+    return render(request, 'tracker/portalEditPass.html', data)
 
 @login_required(login_url='login')
 def certificate(request, pk):
     patient = Patient.objects.get(id=pk)
     cert_date_form = CertDateForm(instance=patient)
-    #cert_date = None
 
     # -- Age (x Years y Months) -- 
     curr_date = datetime.date.today()
@@ -315,21 +410,8 @@ def certificate(request, pk):
     years = curr_date.year - patient.birthdate.year
     age = "{} year {} month".format(years, months)
 
-    # if(request.method == "POST"):
-    #      cert_date_form = EditAppointmentForm(request.POST, instance=patient)
-    #      if cert_date_form.is_valid():
-    #          cert_date_form.save()
-       
-    #      return redirect('/certificate/' + pk)
-
-    # if(request.method == "POST"):
-    #     cert_date = request.POST.get['sign_cert']
-
-    # if cert_date:
-    #     if patient:
-    #         patient.cert_date = cert_date
-    #         patient.save()
-    #     return redirect('/certificate/' + pk)
+    patient.cert_date = curr_date
+    patient.age = age
 
     data = {
         'patient': patient, 
@@ -338,17 +420,46 @@ def certificate(request, pk):
         'cert_date_form': cert_date_form,
     }
     return render(request, 'tracker/certificate.html', data)
-
+    
 class PdfDetail(PDFTemplateResponseMixin, DetailView):
     model = Patient
     template_name = 'tracker/pdf_cert.html'
     download_filename = 'Vaccine Certificate of {}-{}'.format(model.last_name, model.first_name)
     context_object_name = 'patient'
 
-    # curr_date = datetime.date.today()
-    # months = curr_date.month - model.birthdate.month
-    # years = curr_date.year - model.birthdate.year
-    # age = "{} year {} month".format(years, months)
+    def get_context_data(self, *args, **kwargs):
+        patient = self.model 
+        patient_birthdate = patient.birthdate
+        context = super(PdfDetail, self).get_context_data(*args, **kwargs)
+
+        # curr_date = datetime.date.today()
+        # months = curr_date.month - patient_birthdate
+        # years = curr_date.year - patient_birthdate
+
+        context['curr_date'] = datetime.date.today()
+        # context['age'] = "{} year {} month".format(years, months)
+
+        return context
+
+class PdfDetailPatient(PDFTemplateResponseMixin, DetailView):
+    model = Patient
+    template_name = 'tracker/pdf_cert_patient.html'
+    download_filename = 'Vaccine Certificate of {}-{}'.format(model.last_name, model.first_name)
+    context_object_name = 'patient'
+
+    def get_context_data(self, *args, **kwargs):
+        patient = self.model 
+        patient_birthdate = patient.birthdate
+        context = super(PdfDetailPatient, self).get_context_data(*args, **kwargs)
+
+        # curr_date = datetime.date.today()
+        # months = curr_date.month - patient_birthdate
+        # years = curr_date.year - patient_birthdate
+
+        context['curr_date'] = datetime.date.today()
+        # context['age'] = "{} year {} month".format(years, months)
+
+        return context
 
 @login_required(login_url='login')
 def vaccine(request, pk):
@@ -408,18 +519,87 @@ def editVaccine(request, pk):
 @login_required(login_url='login')
 def report(request):
     vaccines = Vaccine.objects.all()
-    return render(request, 'tracker/report.html')
+    physician = Physician.objects.all()
+
+    data = {
+        'physician': physician,
+    }
+    return render(request, 'tracker/report.html', data)
 
 @login_required(login_url='login')
 def reminder(request):
+    physician = Physician.objects.all()
 
-    return render(request, 'tracker/reminder.html')
+    data = {
+        'physician': physician,
+    }
+    
+    return render(request, 'tracker/reminder.html', data)
 
 @login_required(login_url='login')
 def staffUpdate(request):
+    physicians = Physician.objects.all()
     doc_grp = Group.objects.get(name='Doctor')
+    physicianFilter = PhysicianFilter(request.GET, queryset=physicians)
+    physicians = physicianFilter.qs
 
-    return render(request, 'tracker/staffUpdate.html')
+    data = {
+        'physicians': physicians, 'physicianFilter': physicianFilter,
+    }
+
+    return render(request, 'tracker/staffUpdate.html', data)
+
+@login_required(login_url='login')
+def staffUpdateEdit(request, pk):
+    physician = Physician.objects.get(id=pk)
+    staff_create_form = StaffUpdateForm(instance=physician.user)
+    doc_user_form = DoctorForm(instance=physician)
+
+    if(request.method == "POST"):
+        staff_create_form = StaffUpdateForm(request.POST, instance=physician.user)
+        doc_user_form = DoctorForm(request.POST, instance=physician)
+
+        if staff_create_form.is_valid() and doc_user_form.is_valid():
+            staff_create_form.save()
+            doc_user_form.save()
+            messages.success(request, 'Staff details have been saved.')
+        else:
+            messages.error(request, staff_create_form.errors)
+
+        return redirect('/staffUpdate/')
+    
+    data = {
+        'physician': physician,
+        'staff_create_form': staff_create_form,
+        'doc_user_form': doc_user_form,
+    }
+
+    return render(request, 'tracker/staffUpdateEdit.html', data)
+
+@login_required(login_url='login')
+def staffUpdateEditPass(request, pk):
+    physician = Physician.objects.get(id=pk)
+    password_form = PasswordChangeForm(physician.user)
+
+    if(request.method == "POST"):
+        password_form = PasswordChangeForm(physician.user, request.POST)
+
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Password Changed!')
+        else:
+            messages.error(request, password_form.errors)
+        
+        return redirect('/staffUpdate/')
+
+    data = {
+        'physician': physician,
+        'password_form': password_form,
+    }
+
+    return render(request, 'tracker/staffUpdateEditPass.html', data)
+
 
 @login_required(login_url='login')
 def staffCreate(request):

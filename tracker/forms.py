@@ -172,6 +172,15 @@ class PortalForm(UserCreationForm):
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
         }
 
+class PortalFormEdit(ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        widgets = {
+            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username', 'required': True}),
+            'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
+        }
+
 class PatientUserForm(ModelForm):
     class Meta:
         model = PatientUser
@@ -210,6 +219,15 @@ class StaffCreateForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+        widgets = {
+            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username', 'required': True}),
+            'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),
+        }
+
+class StaffUpdateForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
         widgets = {
             'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username', 'required': True}),
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': True,}),

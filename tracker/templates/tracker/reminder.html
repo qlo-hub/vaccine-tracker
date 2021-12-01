@@ -10,6 +10,7 @@
             <div class="btn-group-vertical" style="display: block;">
               <a class="btn btn-outline-primary" href="{% url 'report' %}">Report</a>
               <a class="btn btn-outline-primary active" href="#">Reminder</a>
+              {% if request.user.physician.can_reg == "Yes" %}
               <div class="btn-group dropend">
                 <a class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                   Staff
@@ -19,6 +20,7 @@
                     <a class="btn btn-outline-primary" href="{% url 'staffCreate' %}">Create</a>
                 </ul>
               </div>
+              {% endif %}
             </div>
         </div>
 

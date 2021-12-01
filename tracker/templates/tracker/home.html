@@ -63,6 +63,7 @@
               <th>Date of Birth</th>
             </thead>
             {% for patient in patients %}
+            {% if patient.attending_doctor == request.user.physician %}
             <tbody>
               <tr onclick="window.location='{% url 'patient' patient.id %}'">
                 <td>{{ patient.id }}</td>
@@ -71,6 +72,7 @@
                 <td>{{ patient.birthdate|date:"m/d/Y" }}</td>
               </tr>
             </tbody>
+            {% endif %} 
             {% empty %}
             <tr><td colspan="6" style="color: red;"><h6>No records found.</h6></td></tr>
             {% endfor %}
@@ -79,6 +81,7 @@
             <button class="btn btn-danger"><i class="fas fa-search-minus"></i> Clear search</button>
           </a>
           {% endif %}  
+          
         </div>
     </div>
 </div>

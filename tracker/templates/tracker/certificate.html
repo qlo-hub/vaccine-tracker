@@ -30,7 +30,7 @@
             {% if patient.cert_date is None %}
             <h4>Date: No Vaccine Certificate Yet</h4>
             {% else %}
-            <h4>Date: {{patient.cert_date}}</h4>
+            <h4>Date: <b>{{patient.cert_date}}</b></h4>
             {% endif %}
 
             <div class="certificate-text">
@@ -42,9 +42,6 @@
 
                     {{patient.attending_doctor}}
                 </p> 
-                <form action="post" style="display:inline;">
-                    <button type="submit" class="btn btn-primary" name="sign_cert">Dr. Sign</button>
-                </form>
                 <a style="display:inline;" 
                   class="btn btn-primary" 
                   href="{% url 'generatepdf' patient.id %}" 
@@ -64,7 +61,7 @@
                 </p>
                 <a style="display:inline;" 
                   class="btn btn-primary" 
-                  href="{% url 'generatepdf' patient.id %}" 
+                  href="{% url 'generatepdfpatient' patient.id %}" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   >

@@ -18,13 +18,25 @@
               <a class="btn btn-outline-primary" href="{% url 'patient' patient.id %}">Profile</a>
               <a class="btn btn-outline-primary" href="{% url 'appointment' patient.id %}">Appointment</a>
               <a class="btn btn-outline-primary" href="{% url 'vaccine' patient.id %}">Vaccine</a>
-              <a class="btn btn-outline-primary active" href="#">Portal</a>
+              <a class="btn btn-outline-primary active" href="{% url 'portal' patient.id %}">Portal</a>
               <a class="btn btn-outline-primary" href="{% url 'certificate' patient.id %}">Certificate</a>
             </div>
         </div>
         <div class="col-lg-10" style="background-color: white; padding-top: 8%; padding-bottom: 8%;">
             <div class="portal-fields">
                 <div class="col-lg-6" style="margin-left: 15%;">
+                  <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="col-sm-10">
+                      {{portal_form_edit.username}}
+                      {{portal_form_edit.email}}
+                      {{patient_form.relationship}}
+                    </div>
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <a href="{% url 'portalEditPass' patient.id %}" class="btn btn-warning">Change Password</a>
+                    <a href="{% url 'portal' patient.id %}" class="btn btn-danger">Cancel</a>
+                  </form>
+
                   {% if messages %}
                     {% for message in messages %}
                       {% if message.tags == 'success' %}
@@ -46,37 +58,6 @@
                       {% endif %}
                     {% endfor %}  
                   {% endif %}
-
-                  {% if patient_user is None %}
-                  <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="col-sm-10">
-                      {{portal_form.username}}
-                      {{portal_form.email}}
-                      {{portal_form.password1}}
-                      {{portal_form.password2}}
-                      {{patient_form.relationship}}
-                    </div>
-                    <button type="submit" class="btn btn-success">Create</button>
-                    <a href="{% url 'password_reset' %}" class="btn btn-warning">Forgot</a>
-                  </form>
-                  {% else %}
-                  <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="col-sm-10">
-                      <label>Username</label>
-                      <input type="text" class="form-control" value="{{patient_user.user}}" readonly> 
-                      <label>Email</label>
-                      <input type="text" class="form-control" value="{{patient_user.user.email}}" readonly> 
-                      <label>Relationship</label>
-                      <input type="text" class="form-control" value="{{patient_user.relationship}}" readonly> 
-                    </div>
-                  </form>
-                  <a href="{% url 'portalEdit' patient.id %}" class="btn btn-success">Edit</a>
-                  <a href="{% url 'password_reset' %}" class="btn btn-warning">Forgot Password</a>
-                  {% endif %}
-
-                  
                 </div>
             </div>
         </div>
